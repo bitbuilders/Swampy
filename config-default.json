@@ -1,0 +1,7 @@
+{
+    "menu": [
+        ["Swampy", "/"],
+        ["Profile", "/profile"],
+        ["Create Account", "/create"]
+    ]
+}
