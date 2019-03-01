@@ -34,5 +34,10 @@ exports.pushToDB = (req, res) => {
         if(err)return err;
         console.log(req.body.username + "was added");
     });
-    res.redirect('/'); //future will make this return to the profile page
+    //future will make this return to the profile page
+    res.redirect('/');
 }
+
+// exports.create = () => {
+
+// }
