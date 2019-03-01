@@ -1,7 +1,6 @@
 {
     "menu": [
-        ["Swampy", "/"],
-        ["Profile", "/profile"],
-        ["Create Account", "/create"]
+        ["Swampy", "/", "menuItem"],
+        ["Profile", "/profile", "menuItem"]
     ]
 }

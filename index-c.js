@@ -20,19 +20,26 @@ app.use(expressSession({
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.get('/', (req, res) => {
-    let config = configDefault;
-    let isAdmin = false;
+    let menu = [];
+    menu = menu.concat(configDefault.menu);
+    let user = {};
+    user.isAdmin = true;
     if(req.session.user && req.session.user.isAuthenticated) {
-        config.menu.push(["Logout", "/logout"]);
-        isAdmin = req.session.user.isAdmin;
+        menu.push(["Hello " + req.session.username, "/profile", "menuItem right"]);
+        menu.push(["Logout", "/logout", "menuItem right"]);
+        user.isAdmin = req.session.user.isAdmin;
+        if (user.isAdmin) {
+            menu.push(["Admin Page", "/admin", "menuItem"]);
+        }
     }
     else{
-        config.menu.push(["Login", "/login"]);
+        menu.push(["Create Account", "/create", "menuItem right"]);
+        menu.push(["Login", "/login", "menuItem right"]);
     }
-    console.log(config);
+    console.log(menu);
     res.render('index', {
-        isAdmin,
-        config
+        user,
+        menu
     });
 });
 
