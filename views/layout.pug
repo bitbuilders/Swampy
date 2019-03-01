@@ -1,0 +1,13 @@
+doctype html
+
+html
+    head
+        link(href='style.css' rel='stylesheet')
+    body
+        nav
+            ul
+                each item in menu
+                    li(class=item[2])
+                        a(href=item[1]) #{item[0]}
+        - var admin = user.isAdmin
+        block content

@@ -1,0 +1,6 @@
+{
+    "menu": [
+        ["Swampy", "/", "menuItem"],
+        ["Profile", "/profile", "menuItem"]
+    ]
+}
