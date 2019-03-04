@@ -3,8 +3,6 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
-var authRouter = require('./routes/authentication');
-var homeRouter = require('./routes/home');
 
 var app = express();
 var secret = process.env.SECRET || 'Web-Final';
@@ -19,28 +17,32 @@ app.use(bodyParser.json());
 
 app.use(cookieParser());
 app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}));
-app.use('/auth', authRouter);
-app.use('/', homeRouter);
 
-var checkAuth = function(req, res, next) {
-    if (req.session.user && req.session.user.isAuthenticated) {
-      next();
-    }
-    else {
-      res.redirect('/');
-    }
-}
+app.get('/', function(req, res) {
+    res.render('home');
+});
 
-app.post('/login', urlencodedParser, (req, res) => {
-    if(req.body.username=='user' && req.body.pass=='password'){
-    req.session.user={
-        isAuthenticated: true,
-        username: req.body.username,
-        isAdmin: req.body.isAdmin
-    };
-    res.redirect('/');
-    }else{
-    res.redirect('/');
+// Login User View
+app.get('/Login', function(req, res) {
+    res.render('Login');
+});
+// Login User Logic
+app.post('/Login', function(req, res){
+    // Validate
+    var userName = req.body['userName'];
+    var password = req.body['password'];
+
+    var success = userName && password;
+
+    // Add Session
+    var profile = req.session.profile = {};
+    profile.username = userName;
+
+    // Redirect
+    if(success){
+        res.redirect('/Profile');
+    } else {
+        res.redirect('/');
     }
 });
 
@@ -89,4 +91,23 @@ app.get('/Profile/:username', function(req, res) {
     res.render('profile', { userName: userName, imageURL: url});
 });
 
-app.listen(3000);
+
+// Creates a new Profile
+app.post('/Profile', function(req, res){
+    res.send('Creating Profile is not Implemented');
+})
+// Updates the current User
+app.put('/Profile', function(req, res){
+    res.send('Updating Profile is not Implemented');
+})
+// Deletes the current User
+app.delete('/Profile', function(req, res){
+    res.send('Deleting Profile is not Implemented');
+})
+
+var port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Listening at localhost:${port}`);   
+});
+
+exports = app;

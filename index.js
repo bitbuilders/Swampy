@@ -22,28 +22,6 @@ app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}))
 app.use('/auth', authRouter);
 app.use('/', homeRouter);
 
-var checkAuth = function(req, res, next) {
-    if (req.session.user && req.session.user.isAuthenticated) {
-      next();
-    }
-    else {
-      res.redirect('/');
-    }
-}
-
-app.post('/login', urlencodedParser, (req, res) => {
-    if(req.body.username=='user' && req.body.pass=='password'){
-    req.session.user={
-        isAuthenticated: true,
-        username: req.body.username,
-        isAdmin: req.body.isAdmin
-    };
-    res.redirect('/');
-    }else{
-    res.redirect('/');
-    }
-});
-
 // Logout User - No Logic / View
 app.all('/Logout', function(req, res){
     // Remove Session...
