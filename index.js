@@ -22,7 +22,6 @@ app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}))
 app.use('/auth', authRouter);
 app.use('/', homeRouter);
 
-
 // Logout User - No Logic / View
 app.all('/Logout', function(req, res){
     // Remove Session...

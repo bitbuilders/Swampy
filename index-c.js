@@ -1,59 +1,92 @@
 var express = require('express');
-var pug = require('pug');
-var bodyParser = require('body-parser');
-var expressSession = require('express-session');
 var path = require('path');
-var configDefault = require('./config-default.json');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
+var authRouter = require('./routes/authentication');
+var homeRouter = require('./routes/home');
 
 var app = express();
+var secret = process.env.SECRET || 'Web-Final';
 
 app.set('view engine', 'pug');
-app.set('views', __dirname + '/views');
-app.use(express.static(path.join(__dirname + '/public')));
+app.set('views', path.join(__dirname, 'views'));
 
-app.use(expressSession({
-    secret: 'SwampyNo1',
-    saveUninitialized: true,
-    resave: true
-}));
+app.use('public', express.static(path.join(__dirname, 'public')))
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    let menu = [];
-    menu = menu.concat(configDefault.menu);
-    let user = {};
-    user.isAdmin = true;
-    if(req.session.user && req.session.user.isAuthenticated) {
-        menu.push(["Hello " + req.session.username, "/profile", "menuItem right"]);
-        menu.push(["Logout", "/logout", "menuItem right"]);
-        user.isAdmin = req.session.user.isAdmin;
-        if (user.isAdmin) {
-            menu.push(["Admin Page", "/admin", "menuItem"]);
-        }
+app.use(cookieParser());
+app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}));
+app.use('/auth', authRouter);
+app.use('/', homeRouter);
+
+var checkAuth = function(req, res, next) {
+    if (req.session.user && req.session.user.isAuthenticated) {
+      next();
     }
-    else{
-        menu.push(["Create Account", "/create", "menuItem right"]);
-        menu.push(["Login", "/login", "menuItem right"]);
+    else {
+      res.redirect('/');
     }
-    console.log(menu);
-    res.render('index', {
-        user,
-        menu
-    });
-});
+}
 
 app.post('/login', urlencodedParser, (req, res) => {
     if(req.body.username=='user' && req.body.pass=='password'){
-        req.session.user={
-          isAuthenticated: true,
-          username: req.body.username,
-          isAdmin: req.body.isAdmin
-        };
+    req.session.user={
+        isAuthenticated: true,
+        username: req.body.username,
+        isAdmin: req.body.isAdmin
+    };
+    res.redirect('/');
+    }else{
+    res.redirect('/');
+    }
+});
+
+// Logout User - No Logic / View
+app.all('/Logout', function(req, res){
+    // Remove Session...
+    req.session.profile = undefined;
+
+    // Return to Home
+    res.redirect('/');
+});
+
+// Display User Profile... Assume in Session
+app.get('/Profile', function(req, res) {
+    var profile = req.session.profile;
+
+    // Check existing User Session
+    if(!profile){
         res.redirect('/');
-      }else{
+        return;
+    }
+
+    var userName = profile.userName;
+    var url = `https://api.adorable.io/avatars/256/${userName}.png`;
+    res.render('profile', { userName: userName, imageURL: url});
+});
+// Edit user Profile
+app.get('/Profile/Edit', function(req, res) {
+    var profile = req.session.profile;
+
+    // Check existing User Session
+    if(!profile){
         res.redirect('/');
-      }
+        return;
+    }
+
+    var url = `https://api.adorable.io/avatars/256/${userName}.png`;
+    res.render('profile', { userName: userName, imageURL: url});
+});
+// Display Other Profile
+app.get('/Profile/:username', function(req, res) {
+    var userName = req.params['username'];
+    var size = req.query['size'] || req.body['size'] || 256;
+
+    var url = `https://api.adorable.io/avatars/${size}/${userName}.png`;
+    res.render('profile', { userName: userName, imageURL: url});
 });
 
 app.listen(3000);
