@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}));
 
+
 app.get('/', function(req, res) {
     res.render('home');
 });
@@ -81,6 +82,11 @@ app.get('/Profile/Edit', function(req, res) {
 
     var url = `https://api.adorable.io/avatars/256/${userName}.png`;
     res.render('profile', { userName: userName, imageURL: url});
+
+    var userName = 'Flameo326';
+    var baseURL = 'https://api.adorable.io';
+    var endpoint = `avatars/256/${userName}.png`;
+    var face = await 
 });
 // Display Other Profile
 app.get('/Profile/:username', function(req, res) {

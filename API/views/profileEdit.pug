@@ -4,5 +4,19 @@ html
         link(rel="stylesheet", href="style.css")
     body
         h2 #{userName}
-        a(href="/Logout") Logout
         img(src=imageURL)
+        div 
+            each item in face
+            .form-group
+                label(for="color") Eyes
+                input(type="color" name="color" value="00ff00")
+            .form-group
+                label(for="color")
+                input(type="color" name="color" value="00ff00")
+            .form-group
+                label(for="color")
+                input(type="color" name="color" value="00ff00")
+            .form-group
+                label(for="color")
+                input(type="color" name="color" value="00ff00")
+        script
