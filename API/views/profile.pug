@@ -1,9 +1,9 @@
 html
     head
         title Profile
-        link(rel="stylesheet", href="style.css")
+        link(href="/style.css" type="text/css" rel="stylesheet")
     body
-        h2 #{userName}
+        h2 #{profile.username}
         a(href="/Logout") Logout
-        img(src=imageURL)
+        img(src=profile.imageURL)
         a(href="/Profile/Edit") Edit

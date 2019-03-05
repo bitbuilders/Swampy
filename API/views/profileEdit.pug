@@ -1,22 +1,17 @@
 html
     head
-        title Profile
-        link(rel="stylesheet", href="style.css")
+        title Profile Edit
+        link(href="/style.css" type="text/css" rel="stylesheet")
     body
-        h2 #{userName}
-        img(src=imageURL)
+        h2 #{profile.username}
+        img(id="profileImg" src=profile.imageURL)
         div 
-            each item in face
-            .form-group
-                label(for="color") Eyes
-                input(type="color" name="color" value="00ff00")
-            .form-group
-                label(for="color")
-                input(type="color" name="color" value="00ff00")
-            .form-group
-                label(for="color")
-                input(type="color" name="color" value="00ff00")
-            .form-group
-                label(for="color")
-                input(type="color" name="color" value="00ff00")
-        script
+            each item in Object.keys(face)
+                .form-group
+                    label(for=item) #{item}
+                    button(onclick="changeItem(\"" + item + "\", -1)") &#60;
+                    input(id=item + "Input" type="text" readonly name=item value=face[item][0])
+                    button(onclick="changeItem(\"" + item + "\", 1)") &#62;
+        script(type="text/javascript").
+            var face = !{JSON.stringify(face).replace(/<\//g, "<\\/")}
+        script(src="/edit.js")
