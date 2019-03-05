@@ -88,21 +88,23 @@ app.get('/Profile/Edit', function(req, res) {
 });
 // Edit user Profile
 app.post('/Profile/Edit', function(req, res) {
-    var profile = req.session.profile;
+    var profile = req.session.profile;    
+    var profileEdit = req.body;
 
     // Check existing User Session
     if(!profile){
         res.redirect('/');
         return;
     }
+    if(profile.username !== profileEdit.username){
+        throw new Error("You do not have permission to Edit that user");
+    }
 
-    var url = `https://api.adorable.io/avatars/256/${userName}.png`;
-    res.render('profile', { userName: userName, imageURL: url});
-
-    var userName = 'Flameo326';
-    var baseURL = 'https://api.adorable.io';
-    var endpoint = `avatars/256/${userName}.png`;
-
+    if(profileEdit.imageURL){
+        profile.imageURL = profileEdit.imageURL;
+    }
+    
+    res.redirect('/Profile');
 });
 // Display Other Profile
 app.get('/Profile/:username', function(req, res) {

@@ -5,3 +5,7 @@ body {
 .form-group{
     display: flex;
 }
+
+.hide {
+    display: none;
+}

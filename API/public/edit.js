@@ -3,6 +3,7 @@ const BASE_URL = 'https://api.adorable.io/avatars';
 // const face;
 
 console.log(face);
+console.log(profile);
 // console.log(faceObj);
 // console.log(users);
 
@@ -14,9 +15,30 @@ var currFace = {};
     }
 }
 
+function useDefaultAvatar(){
+    var avatarCustBox = document.getElementById('AvatarCustomization');
+    avatarCustBox.classList.add('hide');
+
+    var imageInput = document.getElementById('imageInput');
+    var profileImg = document.getElementById('profileImg');
+
+    var src = BASE_URL + '/' + profile.username + '.png';
+    profileImg.src = src;
+    imageInput.value = src;
+}
+function useCustomAvatar(){
+    var avatarCustBox = document.getElementById('AvatarCustomization');
+
+    avatarCustBox.classList.remove('hide');
+
+    changeImage();
+}
+
+useDefaultAvatar();
+
 function changeItem(name, amo){
-    console.log(currFace);
-    console.log(face);
+    // console.log(currFace);
+    // console.log(face);
 
     currFace[name] = currFace[name] + amo;
 
@@ -32,11 +54,10 @@ function changeItem(name, amo){
 
     changeImage();
 }
-
 function changeImage(){
     var profileImg = document.getElementById('profileImg');
 
-    var src = BASE_URL + '\\face';
+    var src = BASE_URL + '/face';
     let keys = Object.keys(face);
     for(var i = 0; i < keys.length; i++){
         var index = currFace[keys[i]];
@@ -45,4 +66,7 @@ function changeImage(){
     console.log(src);
 
     profileImg.src = src;
+
+    var imageInput = document.getElementById('imageInput');
+    imageInput.value = src;
 }
