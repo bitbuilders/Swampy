@@ -9,15 +9,16 @@ var urlencodedParser = bodyParser.urlencoded({
 
 var router = express.Router();
 
-router.get('/', auth, (req, res) => {
+router.get('/', util.auth, (req, res) => {
     var userData = util.getMenu(req, res);
+    console.log('HI');
     res.render('profile', {
         user: userData.user,
         menu: userData.menu
     });
 });
 
-router.get('/Edit', auth, (req, res) => {
+router.get('/Edit', util.auth, (req, res) => {
     var userData = util.getMenu(req, res);
     res.render('profileEdit', {
         user: userData.user,
@@ -25,7 +26,7 @@ router.get('/Edit', auth, (req, res) => {
     });
 });
 
-router.post('/Edit', auth, (req, res) => {
+router.post('/Edit', util.auth, (req, res) => {
     var userData = util.getMenu(req, res);
     res.redirect('/');
 });
