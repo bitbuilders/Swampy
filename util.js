@@ -25,4 +25,15 @@ const getMenu = (req, res) => {
     };
 };
 
+const auth = ('/auth', (req, res, next) => {
+    console.log("Interceptor Passthrough");
+    if (req.session.user && req.session.user.isAuthenticated) {
+      next();
+    }
+    else {
+      res.redirect('/');
+    }
+});
+
 exports.getMenu = getMenu;
+exports.auth = auth;
