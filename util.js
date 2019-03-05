@@ -5,7 +5,8 @@ const getMenu = (req, res) => {
     menu = menu.concat(configDefault.menu);
     let user = {};
     user.isAdmin = true;
-    if(req.session.user && req.session.user.isAuthenticated) {
+    if (req.session.user && req.session.user.isAuthenticated) {
+        menu.push(["Profile", "/profile", "menuItem"]);
         menu.push(["Hello " + req.session.username, "/profile", "menuItem right"]);
         menu.push(["Logout", "/logout", "menuItem right"]);
         user.isAdmin = req.session.user.isAdmin;
@@ -13,7 +14,7 @@ const getMenu = (req, res) => {
             menu.push(["Admin Page", "/admin", "menuItem"]);
         }
     }
-    else{
+    else {
         menu.push(["Create Account", "/create", "menuItem right"]);
         menu.push(["Login", "/login", "menuItem right"]);
     }
