@@ -4,19 +4,23 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 
+var faceConfig = require('./config/face.json');
+
 var app = express();
 var secret = process.env.SECRET || 'Web-Final';
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('public', express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cookieParser());
 app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}));
+
+const BASE_URL = 'https://api.adorable.io/avatars/';
 
 app.get('/', function(req, res) {
     res.render('home');
@@ -37,6 +41,7 @@ app.post('/Login', function(req, res){
     // Add Session
     var profile = req.session.profile = {};
     profile.username = userName;
+    profile.imageURL = BASE_URL + userName + '.png';
 
     // Redirect
     if(success){
@@ -59,15 +64,15 @@ app.all('/Logout', function(req, res){
 app.get('/Profile', function(req, res) {
     var profile = req.session.profile;
 
+    console.log(profile);
+
     // Check existing User Session
     if(!profile){
         res.redirect('/');
         return;
     }
 
-    var userName = profile.userName;
-    var url = `https://api.adorable.io/avatars/256/${userName}.png`;
-    res.render('profile', { userName: userName, imageURL: url});
+    res.render('profile', {profile: profile});
 });
 // Edit user Profile
 app.get('/Profile/Edit', function(req, res) {
@@ -79,8 +84,27 @@ app.get('/Profile/Edit', function(req, res) {
         return;
     }
 
-    var url = `https://api.adorable.io/avatars/256/${userName}.png`;
-    res.render('profile', { userName: userName, imageURL: url});
+    res.render('profileEdit', { profile: profile, face: faceConfig["face"]});
+});
+// Edit user Profile
+app.post('/Profile/Edit', function(req, res) {
+    var profile = req.session.profile;    
+    var profileEdit = req.body;
+
+    // Check existing User Session
+    if(!profile){
+        res.redirect('/');
+        return;
+    }
+    if(profile.username !== profileEdit.username){
+        throw new Error("You do not have permission to Edit that user");
+    }
+
+    if(profileEdit.imageURL){
+        profile.imageURL = profileEdit.imageURL;
+    }
+    
+    res.redirect('/Profile');
 });
 // Display Other Profile
 app.get('/Profile/:username', function(req, res) {
