@@ -22,18 +22,25 @@ var userSchema = mongoose.Schema({
 var User = mongoose.model("User_Collection", userSchema);
 
 exports.pushToDB = (req, res) => {
-    var user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        // avatar: api call using the req.body.username,
-        isAdmin: req.body.admin,
-        email: req.body.email,
-        age: req.body.age
-    });
-    user.save(function(err, user){
-        if(err)return err;
-        console.log(req.body.username + "was added");
-    });
+    let temp = new User();
+    User.findOne({username: req.body.username}, function(err, results){
+        if(!results){
+            //this is found nothing make a new user
+            var user = new User({
+                username: req.body.username,
+                password: req.body.password,
+                // avatar: api call using the req.body.username,
+                isAdmin: req.body.admin,
+                email: req.body.email,
+                age: req.body.age
+            });
+            user.save(function(err, user){
+                if(err)return err;
+                console.log(req.body.username + "was added");
+            });
+        }
+    })
+    
     //future will make this return to the profile page
     res.redirect('/');
 }
