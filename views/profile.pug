@@ -1,8 +1,7 @@
-html
-    head
-        title Profile
-        link(rel="stylesheet", href="style.css")
-    body
-        h2 #{userName}
-        a(href="/Logout") Logout
-        img(src=imageURL)
+extends layout
+
+block content
+    h2 #{user.username}
+    a(href="/Logout") Logout
+    img(src=user.imageURL)
+    a(href="/Profile/Edit") Edit

@@ -1,14 +1,12 @@
-html
-    head
-        title Home
-        link(rel="stylesheet", href="public/style.css")
-    body
-        form(action="/Login", method="post")
-            .formGroup
-                label(for="userName") UserName:
-                input(type="text", name="userName")
-            .formGroup
-                label(for="password") Password:
-                input(type="password", name="password")
-            .formGroup
-                input(type="submit", value="Login")
+extends layout
+
+block content
+    form(action="/Login", method="post")
+        .formGroup
+            label(for="userName") UserName:
+            input(type="text", name="username")
+        .formGroup
+            label(for="password") Password:
+            input(type="password", name="password")
+        .formGroup
+            input(type="submit", value="Login")

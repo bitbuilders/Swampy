@@ -2,12 +2,12 @@ doctype html
 
 html
     head
-        link(href='style.css' rel='stylesheet')
+        link(href='/style.css' type='text/css' rel='stylesheet')
     body
         nav
             ul
                 each item in menu
                     li(class=item[2])
                         a(href=item[1]) #{item[0]}
-        - var admin = user.isAdmin
+        //- - var admin = user.isAdmin
         block content
