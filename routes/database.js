@@ -28,18 +28,18 @@ var messageSchema = mongoose.Schema({
 var User = mongoose.model("user_collection", userSchema);
 var Message = mongoose.model("message_thread", messageSchema);
 
-exports.pushToDB = (req, res) => {
+exports.pushToDB = (user) => {
     let user = new User();
     User.findOne({username: req.body.username}, function(err, results){
         if(!results){
             //this found nothing make a new user
             user = new User({
-                username: req.body.username,
-                password: req.body.password,
-                // avatar: api call using the req.body.username,
-                isAdmin: req.body.admin,
-                email: req.body.email,
-                age: req.body.age
+                username: user.username,
+                password: user.password,
+                // imageUrl: api call using the req.body.username,
+                isAdmin: user.isAdmin,
+                email: user.email,
+                age: user.age
             });
             User.create(user);
             console.log("User should've created");
@@ -61,7 +61,7 @@ exports.pushToDB = (req, res) => {
     });
 }
 
-exports.MakeNewMessage = (req, res) => {
+exports.makeNewMessage = (req, res) => {
     let mess = new Message({
         username: req.body.username,
         title: req.body.title,
@@ -71,22 +71,22 @@ exports.MakeNewMessage = (req, res) => {
     console.log("Message should've created");
 }
 
-exports.UpdateUserAvatar = (username, avatar) => {
+exports.updateUserAvatar = (username, imageUrl) => {
     User.findOne({username: username}, function(err,results){
         if(!results){
             //this found nothing and should be impossiple 
         }else{
             //this found something
             // bleh = new User({
-            //     avatar: avatar
+            //     imageUrl: imageUrl
             // });
-            results.avatar = avatar;
+            results.imageUrl = imageUrl;
             results.save();
         }
     })
 }
 
-exports.Login = (username, password) => {
+exports.login = (username, password) => {
     let bleh = new User();
     User.findOne({username: username}, function(err, results){
         if(!results){
