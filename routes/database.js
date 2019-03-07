@@ -13,7 +13,7 @@ db.once('open', function(callback){
 var userSchema = mongoose.Schema({
     username: String,
     password: String,
-    imageUrl: String,
+    imageURL: String,
     isAdmin: Boolean,
     email: String,
     age: Number
@@ -25,36 +25,33 @@ var messageSchema = mongoose.Schema({
     message: String
 });
 
-var User = mongoose.model("user_collection", {
-    username: String,
-    // password: String,
-    // imageUrl: String,
-    // isAdmin: Boolean,
-    // email: String,
-    // age: Number
-});
+var User = mongoose.model("user_collection", userSchema);
 var Message = mongoose.model("message_thread", messageSchema);
 
 async function pushToDB(user) {
     let bleh = new User();
 
-    console.log(user);
-
-    // var userResult = await User.findOne({username: user.username}).exec();
-    bleh = new User(user);
-    var result = await User.create(bleh);
-    console.log(result);
-    console.log("User should've created");
-    var ugh = {
-        user: bleh,
-        error: ""
-    }
-    return ugh;
+    var userResult = await User.findOne({username: user.username}).exec();
 
     console.log(userResult);
 
     if(!userResult){
-
+        bleh = new User({
+            username: user.username,
+            password: user.password,
+            imageUrl: user.imageUrl,
+            isAdmin: user.isAdmin,
+            email: user.email,
+            age: user.age
+        });
+        var result = await User.create(bleh);
+        console.log(result);
+        console.log("User should've created");
+        var ugh = {
+            user: bleh,
+            error: ""
+        }
+        return ugh;
     } else {
         //this user already exists
         //return a user and the error message if he already exists
@@ -124,36 +121,47 @@ exports.updateUserAvatar = (username, imageUrl) => {
     })
 }
 
-exports.login = (username, password) => {
-    let bleh = new User();
-    User.findOne({username: username}, function(err, results){
-        if(!results){
-            //found nothing so failed login
-            bleh = {
-                error: "Login Failed Username not found"
-            }
-        }else{
-            //found something so log them in
-            User.findOne({password: password}, function(err, otherResults){
-                //i still need to check of the password hash is actually the true password
-                if(!otherResults){
-                    //found nothing so login still failed
-                    bleh = {
-                        error: "Login Failed becase of password"
-                    }
-                }
-                bleh = new User({
-                    username: results.username,
-                    password: results.password,
-                    avatar: results.avatar,
-                    isAdmin: results.isAdmin,
-                    email: results.email,
-                    age: results.age
-                });
-            })
-        }
-        return bleh
-    })
+exports.login = async (username, password) => {
+
+    var user = await User.findOne({username: username}).exec();
+
+    if(!user){
+        return {error: "Login Failed Username not found"};
+    }
+
+    if(user.password == password){
+        return  {user: user};
+    } else {
+        return {error: "Login Failed becase of password"};
+    }
+    // , function(err, results){
+    //     if(!results){
+    //         //found nothing so failed login
+    //         bleh = {
+    //             error: "Login Failed Username not found"
+    //         }
+    //     }else{
+    //         //found something so log them in
+    //         User.findOne({password: password}, function(err, otherResults){
+    //             //i still need to check of the password hash is actually the true password
+    //             if(!otherResults){
+    //                 //found nothing so login still failed
+    //                 bleh = {
+    //                     error: "Login Failed becase of password"
+    //                 }
+    //             }
+    //             bleh = new User({
+    //                 username: results.username,
+    //                 password: results.password,
+    //                 avatar: results.avatar,
+    //                 isAdmin: results.isAdmin,
+    //                 email: results.email,
+    //                 age: results.age
+    //             });
+    //         })
+    //     }
+    //     return bleh
+    // })
 }
 
 

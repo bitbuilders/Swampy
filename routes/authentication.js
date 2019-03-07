@@ -20,8 +20,8 @@ router.get('/Login', function(req, res) {
 // Login User Logic
 router.post('/Login', function(req, res){
     // // Validate
-    // var userName = req.body['userName'];
-    // var password = req.body['password'];
+    var username = req.body['username'];
+    var password = req.body['password'];
 
     var success = false;
 
@@ -38,6 +38,9 @@ router.post('/Login', function(req, res){
     } else {
         res.redirect('/');
     }
+
+    database.login(username, password)
+
 });
 
 router.get('/Register', function(req, res) {
@@ -49,9 +52,9 @@ router.get('/Register', function(req, res) {
 router.post('/Register', function(req, res) {
     // Validate
     var user = {};
-    user.userName = req.body['username'];
+    user.username = req.body['username'];
     user.password = req.body['password'];
-    user.imageURL = API.BASE_URL + user.userName + '.png';
+    user.imageURL = API.BASE_URL + user.username + '.png';
     user.isAdmin = req.body['admin'] === "on";
     user.email = req.body['email'];
     user.age = req.body['age'];
@@ -59,12 +62,12 @@ router.post('/Register', function(req, res) {
     // Create
     database.pushToDB(user)
         .then(success => {
-            console.log('After', success);
             req.session.user = success.user;
             res.redirect('/Profile');
         })
         .catch(fail => {
-            console.log('After',fail);
+            console.log('Creation Failed')
+            console.log(fail);
             res.redirect('/');
         });
 });
@@ -72,7 +75,7 @@ router.post('/Register', function(req, res) {
 // Logout User - No Logic / View
 router.all('/Logout', function(req, res){
     // Remove Session...
-    req.session.profile = undefined;
+    req.session.user = undefined;
 
     // Return to Home
     res.redirect('/');
