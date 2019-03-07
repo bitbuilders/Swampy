@@ -1,5 +1,5 @@
 var express = require('express');
-// var database = require('./database');
+var database = require('./database');
 var API = require('../utility/api');
 var util = require('../utility/util');
 
@@ -48,23 +48,25 @@ router.get('/Register', function(req, res) {
 });
 router.post('/Register', function(req, res) {
     // Validate
-    var userName = req.body['username'];
-    var password = req.body['password'];
+    var user = {};
+    user.userName = req.body['username'];
+    user.password = req.body['password'];
+    user.imageURL = API.BASE_URL + user.userName + '.png';
+    user.isAdmin = req.body['admin'] === "on";
+    user.email = req.body['email'];
+    user.age = req.body['age'];
 
-    var success = userName && password;
-
-    // Add Session
-    var user = req.session.user = {};
-    user.username = userName;
-    user.imageURL = API.BASE_URL + userName + '.png';
-
-    console.log('here');
-
-    if(success){
-        res.redirect('/Profile');
-    } else {
-        res.redirect('/');
-    }
+    // Create
+    database.pushToDB(user)
+        .then(success => {
+            console.log('After', success);
+            req.session.user = success.user;
+            res.redirect('/Profile');
+        })
+        .catch(fail => {
+            console.log('After',fail);
+            res.redirect('/');
+        });
 });
 
 // Logout User - No Logic / View

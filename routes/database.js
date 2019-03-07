@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Data', {
     useNewUrlParser:true
 });
@@ -13,7 +13,7 @@ db.once('open', function(callback){
 var userSchema = mongoose.Schema({
     username: String,
     password: String,
-    avatar: String,
+    imageUrl: String,
     isAdmin: Boolean,
     email: String,
     age: Number
@@ -25,41 +25,79 @@ var messageSchema = mongoose.Schema({
     message: String
 });
 
-var User = mongoose.model("user_collection", userSchema);
+var User = mongoose.model("user_collection", {
+    username: String,
+    // password: String,
+    // imageUrl: String,
+    // isAdmin: Boolean,
+    // email: String,
+    // age: Number
+});
 var Message = mongoose.model("message_thread", messageSchema);
 
-exports.pushToDB = (user) => {
-    let user = new User();
-    User.findOne({username: req.body.username}, function(err, results){
-        if(!results){
-            //this found nothing make a new user
-            user = new User({
-                username: user.username,
-                password: user.password,
-                // imageUrl: api call using the req.body.username,
-                isAdmin: user.isAdmin,
-                email: user.email,
-                age: user.age
-            });
-            User.create(user);
-            console.log("User should've created");
-            var ugh = {
-                user,
-                error: ""
-            }
-            return ugh;
+async function pushToDB(user) {
+    let bleh = new User();
+
+    console.log(user);
+
+    // var userResult = await User.findOne({username: user.username}).exec();
+    bleh = new User(user);
+    var result = await User.create(bleh);
+    console.log(result);
+    console.log("User should've created");
+    var ugh = {
+        user: bleh,
+        error: ""
+    }
+    return ugh;
+
+    console.log(userResult);
+
+    if(!userResult){
+
+    } else {
+        //this user already exists
+        //return a user and the error message if he already exists
+        var ugh = {
+            user: null,
+            error: "User already exists"
         }
-        else{
-            //this user already exists
-            //return a user and the error message if he already exists
-            var ugh = {
-                user: "",
-                error: "User already exists"
-            }
-            return ugh;
-        }
-    });
+        return ugh;
+    }
+
+    // User.findOne({username: user.username}, async function(err, results){
+    //     console.log(results);
+    //     if(!results){
+    //         //this found nothing make a new user
+    //         bleh = new User({
+    //             username: user.username,
+    //             password: user.password,
+    //             imageUrl: user.imageUrl,
+    //             isAdmin: user.isAdmin,
+    //             email: user.email,
+    //             age: user.age
+    //         });
+    //         var result = await User.create(bleh);
+    //         console.log("User should've created");
+    //         var ugh = {
+    //             user: bleh,
+    //             error: ""
+    //         }
+    //         // return ugh;
+    //         return result;
+    //     }
+    //     else{
+    //         //this user already exists
+    //         //return a user and the error message if he already exists
+    //         var ugh = {
+    //             user: null,
+    //             error: "User already exists"
+    //         }
+    //         return ugh;
+    //     }
+    // });
 }
+exports.pushToDB = pushToDB;
 
 exports.makeNewMessage = (req, res) => {
     let mess = new Message({

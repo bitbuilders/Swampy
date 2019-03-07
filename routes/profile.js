@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
     var user = util.getUser(req, res);
     var menu = util.getMenu(user);
 
-    console.log(user);
+    console.log('Session User is', user);
 
     // Check existing User Session
     if(!user){
