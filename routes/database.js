@@ -75,19 +75,14 @@ exports.makeNewMessage = (req, res) => {
     console.log("Message should've created");
 }
 
-exports.updateUserAvatar = (username, imageURL) => {
-    User.findOne({username: username}, function(err,results){
-        if(!results){
-            //this found nothing and should be impossiple 
-        }else{
-            //this found something
-            // bleh = new User({
-            //     imageUrl: imageUrl
-            // });
-            results.imageURL = imageURL;
-            results.save();
-        }
-    })
+exports.updateUserAvatar = async (username, imageURL) => {
+    var result = await User.findOne({username: username}).exec();
+    if(result){
+        result.imageURL = imageURL;
+        result.save();
+        return {user: result};
+    }
+    return {error: "No user found"};
 }
 
 exports.login = async (username, password) => {

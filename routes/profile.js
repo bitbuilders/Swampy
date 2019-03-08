@@ -50,7 +50,7 @@ router.get('/:username', function(req, res) {
 });
 
 // Edit user Profile
-router.post('/Edit', function(req, res) {
+router.post('/Edit', async function(req, res) {
     var user = util.getUser(req, res);
     var profileEdit = req.body;
 
@@ -64,8 +64,16 @@ router.post('/Edit', function(req, res) {
     }
 
     if(profileEdit.imageURL){
-        database.updateUserAvatar(user.username, profileEdit.imageURL);
-        user.imageURL = profileEdit.imageURL;
+        database.updateUserAvatar(user.username, profileEdit.imageURL)
+            .then(result => {
+                if(result.error){
+                    console.log(error);
+                    return;
+                }
+
+                req.session.user = result.user;
+            })
+        // user.imageURL = profileEdit.imageURL;
     }
     
     res.redirect('/Profile');
