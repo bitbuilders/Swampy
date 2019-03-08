@@ -26,52 +26,5 @@ app.use('/Auth', authRouter);
 app.use('/Profile', profileRouter);
 app.use('/', homeRouter);
 
-
-
-// // Logout User - No Logic / View
-// app.all('/Logout', function(req, res){
-//     // Remove Session...
-//     req.session.profile = undefined;
-
-//     // Return to Home
-//     res.redirect('/');
-// });
-
-// // Display User Profile... Assume in Session
-// app.get('/Profile', function(req, res) {
-//     var profile = req.session.profile;
-
-//     // Check existing User Session
-//     if(!profile){
-//         res.redirect('/');
-//         return;
-//     }
-
-//     var userName = profile.userName;
-//     var url = `https://api.adorable.io/avatars/256/${userName}.png`;
-//     res.render('profile', { userName: userName, imageURL: url});
-// });
-// // Edit user Profile
-// app.get('/Profile/Edit', function(req, res) {
-//     var profile = req.session.profile;
-
-//     // Check existing User Session
-//     if(!profile){
-//         res.redirect('/');
-//         return;
-//     }
-
-//     var url = `https://api.adorable.io/avatars/256/${userName}.png`;
-//     res.render('profile', { userName: userName, imageURL: url});
-// });
-// // Display Other Profile
-// app.get('/Profile/:username', function(req, res) {
-//     var userName = req.params['username'];
-//     var size = req.query['size'] || req.body['size'] || 256;
-
-//     var url = `https://api.adorable.io/avatars/${size}/${userName}.png`;
-//     res.render('profile', { userName: userName, imageURL: url});
-// });
-
 app.listen(3000);
 console.log('Listening at http://localhost:3000');

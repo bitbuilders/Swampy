@@ -18,29 +18,20 @@ router.get('/Login', function(req, res) {
     res.render('Login', { user, menu });
 });
 // Login User Logic
-router.post('/Login', function(req, res){
+router.post('/Login', async function(req, res){
     // // Validate
     var username = req.body['username'];
     var password = req.body['password'];
+    console.log('here');
 
-    var success = false;
-
-    // // Add Session
-    // var profile = req.session.profile = {};
-    // profile.username = userName;
-    // profile.imageURL = API.BASE_URL + userName + '.png';
-
-    // database.pushToDB(req);
-
-    // Redirect
-    if(success){
+    var data = await database.login(username, password);
+    console.log(data);
+    if(!data.error){
+        req.session.user = data.user 
         res.redirect('/Profile');
     } else {
         res.redirect('/');
     }
-
-    database.login(username, password)
-
 });
 
 router.get('/Register', function(req, res) {

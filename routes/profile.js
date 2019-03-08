@@ -1,4 +1,5 @@
 var express = require('express');
+var database = require('./database');
 var API = require('../utility/api');
 var util = require('../utility/util');
 
@@ -15,6 +16,7 @@ router.get('/', function(req, res) {
 
     // Check existing User Session
     if(!user){
+        console.log('Redirecting');
         res.redirect('/');
         return;
     }
@@ -40,11 +42,11 @@ router.get('/:username', function(req, res) {
     var user = util.getUser(req, res);
     var menu = util.getMenu(user);
 
-    var userName = req.params['username'];
-    var size = req.query['size'] || req.body['size'] || 256;
+    var username = req.params['username'];
 
-    var url = `${API.BASE_URL}${size}/${userName}.png`;
-    res.render('profile', {menu, user, userName: userName, imageURL: url});
+    var displayUser = database.getUser(username);
+
+    res.render('profile', {menu, user: displayUser});
 });
 
 // Edit user Profile
@@ -62,6 +64,7 @@ router.post('/Edit', function(req, res) {
     }
 
     if(profileEdit.imageURL){
+        database.updateUserAvatar(user.username, profileEdit.imageURL);
         user.imageURL = profileEdit.imageURL;
     }
     
@@ -69,7 +72,7 @@ router.post('/Edit', function(req, res) {
 });
 
 // Deletes the current User
-router.delete('', function(req, res){
+router.delete('/', function(req, res){
     res.send('Deleting Profile is not Implemented');
 })
 
