@@ -1,3 +1,211 @@
+/*
+ *  Color Palette:
+ *      - Rich Black:   #040303
+ *      - Beige:        #FAF3DD
+ *      - Pale Silver:  #C8D5B9
+ *      - Artichoke:    #8B9D83
+ *      - Eton Blue:    #8FC0A9
+ */
+
 html {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #C8D5B9;
+}
+
+h1, h2 {
+    color: #8FC0A9;
+    text-shadow: 1px 1px 4px #040303;
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 35px;
+}
+
+p {
+    color: #FAF3DD;
+    font-size: 25px;
+}
+
+body {
+    width: 65%;
+    margin: 60px auto;
+    padding: 5px;
+}
+
+footer {
+    margin: 75px auto 0px auto;
+    width: 50%;
+    text-align: center;
+    text-shadow: 1px 1px 2px #040303;
+}
+
+article {
+    background: #8B9D83;
+}
+
+nav {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+nav ul {
+    width: 100%;
+    margin: 0px;
+    overflow: hidden;
+    padding: 0px;
+    list-style-type: none;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #8B9D83;
+    height: 60px;
+    box-shadow: 0px 0px 10px #040303;
+}
+
+nav li {
+    float: left;
+    padding: 0;
+    margin: 0;
+}
+
+nav a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin: 0;
+    padding: 17px 15px;
+    font-size: 25px;
+}
+
+nav a:hover {
+    background: #C8D5B9;
+}
+
+.menuItem a {
+    color: #FAF3DD;
+}
+
+.right {
+    float: right;
+    background: #8FC0A9;
+}
+
+.block {
+    margin: 15px 0px;
+    background: #8B9D83;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.section {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 15px;
+    width: 70%;
+    background: #8B9D83;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.sectionRight {
+    text-align: right;
+}
+
+.messageBoard {
+    margin: 15px 0px;
+    background: #8B9D83;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.boardTitle {
+    text-align: center;
+
+}
+
+.createMessage {
+    margin: 10px auto;
+}
+
+#newMessage {
+
+}
+
+.messageText {
+    display: block;
+    width: 75%;
+    height: 80px;
+    max-width: 75%;
+    min-width: 75%;
+    max-height: 120px;
+    min-height:  40px;
+    margin: 10px auto;
+    background: #8FC0A9;
+    border: 1px solid #040303;
+    border-radius: 5px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    padding: 5px;
+    color: #FAF3DD;
+    font-size: 25px;
+}
+
+.messageText:focus {
+    box-shadow: 0 0 0 2pt #C8D5B9;
+    outline: none;
+}
+
+.messageSubmit {
+    display: block;
+    margin: 20px auto;
+    width: 30%;
+    height: 40px;
+    font-size: 30px;
+    background: #8FC0A9;
+    color: #FAF3DD;
+    border-radius: 5px;
+    border: 1px solid #040303;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.messageSubmit:focus {
+    box-shadow: 0 0 0 1pt #C8D5B9;
+    outline: none;
+}
+
+.messageSubmit:hover {
+    background: #C8D5B9;
+    cursor: pointer;
+}
+
+.message {
+    background: #8FC0A9;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.messageUser {
+
+}
+
+.messageEdit {
+    float: right;
+    margin: 15px 10px;
+}
+
+.messageDelete {
+    float: right;
+    margin: 15px 10px;
+}
+
+.messageContent {
     
+}
+
+.messageDate {
+    text-align: right;
 }

@@ -2,7 +2,7 @@ doctype html
 
 html
     head
-        link(href='style.css' rel='stylesheet')
+        link(rel="stylesheet", href="style.css", type='text/css')
     body
         nav
             ul
@@ -11,3 +11,5 @@ html
                         a(href=item[1]) #{item[0]}
         - var admin = user.isAdmin
         block content
+        footer
+            p &copy; Swampy Inc.
