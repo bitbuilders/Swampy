@@ -23,6 +23,16 @@ const getMenu = (req, res) => {
         user,
         menu
     };
-};
+}
+
+const auth = ('/auth', (req, res, next) => {
+    if (req.session.user && req.session.user.isAuthenticated) {
+      next();
+    }
+    else {
+      res.redirect('/');
+    }
+});
 
 exports.getMenu = getMenu;
+exports.auth = auth;

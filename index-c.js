@@ -3,8 +3,9 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
-var authRouter = require('./routes/authentication');
 var homeRouter = require('./routes/home');
+var loginRouter = require('./routes/login');
+var profileRouter = require('./routes/profile');
 
 var app = express();
 var secret = process.env.SECRET || 'Web-Final';
@@ -12,14 +13,19 @@ var secret = process.env.SECRET || 'Web-Final';
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('public', express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, '/public')))
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+var urlencodedParser = bodyParser.urlencoded({
+    extended: true
+});
+
 app.use(cookieParser());
 app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}));
-app.use('/auth', authRouter);
+app.use('/login', loginRouter);
+app.use('/profile', profileRouter);
 app.use('/', homeRouter);
 
 var checkAuth = function(req, res, next) {
@@ -31,18 +37,18 @@ var checkAuth = function(req, res, next) {
     }
 }
 
-app.post('/login', urlencodedParser, (req, res) => {
-    if(req.body.username=='user' && req.body.pass=='password'){
-    req.session.user={
-        isAuthenticated: true,
-        username: req.body.username,
-        isAdmin: req.body.isAdmin
-    };
-    res.redirect('/');
-    }else{
-    res.redirect('/');
-    }
-});
+// app.post('/login', urlencodedParser, (req, res) => {
+//     if(req.body.username=='user' && req.body.pass=='password'){
+//     req.session.user={
+//         isAuthenticated: true,
+//         username: req.body.username,
+//         isAdmin: req.body.isAdmin
+//     };
+//     res.redirect('/');
+//     }else{
+//     res.redirect('/');
+//     }
+// });
 
 // Logout User - No Logic / View
 app.all('/Logout', function(req, res){
