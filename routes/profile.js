@@ -68,15 +68,12 @@ router.post('/Edit', async function(req, res) {
             .then(result => {
                 if(result.error){
                     console.log(error);
-                    return;
                 }
 
                 req.session.user = result.user;
+                res.redirect('/Profile');
             })
-        // user.imageURL = profileEdit.imageURL;
     }
-    
-    res.redirect('/Profile');
 });
 
 // Deletes the current User
