@@ -15,8 +15,11 @@ block content
                 textarea(type="text", name="message", class="messageText")
                 input(type="submit", value="V", class="messageSubmit")
     div(class="message")
-        p(class="messageDelete") Delete
-        p(class="messageEdit") Edit
+        p(class="messageDelete")
+            a(href="/") Delete
+        p(class="messageEdit")
+            a(href="/") Edit
+        img(class="messageImage", src="https://wvtourism.com/wp-content/uploads/2018/04/3144431-shrek2-480x240.jpg")
         p(class="messageUser") Colin
         p(class="messageContent") What a wonderful day to make a website with some css and stuff. It brings tears to my eyes.
         p(class="messageDate") 3-7-2019 11:42 AM
