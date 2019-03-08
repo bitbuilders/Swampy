@@ -1,14 +1,13 @@
 var express = require('express');
-var util = require('../util');
+var util = require('../utility/util');
 
 var router = express.Router();
 
 router.get('/', (req, res) => {
-    var userData = util.getMenu(req, res);
-    res.render('index', {
-        user: userData.user,
-        menu: userData.menu
-    });
+    var user = util.getUser(req, res);
+    var menu = util.getMenu(user);
+
+    res.render('index', { user, menu });
 });
 
 module.exports = router;

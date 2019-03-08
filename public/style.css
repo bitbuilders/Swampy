@@ -209,3 +209,9 @@ nav a:hover {
 .messageDate {
     text-align: right;
 }
+.form-group{
+    display: flex;
+}
+.hide {
+    display: none;
+}

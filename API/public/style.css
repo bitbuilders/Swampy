@@ -1,0 +1,11 @@
+body {
+    text-align: center;
+}
+
+.form-group{
+    display: flex;
+}
+
+.hide {
+    display: none;
+}

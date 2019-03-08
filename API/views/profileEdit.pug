@@ -1,8 +1,32 @@
 html
     head
-        title Profile
-        link(rel="stylesheet", href="style.css")
+        title Profile Edit
+        link(href="/style.css" type="text/css" rel="stylesheet")
     body
-        h2 #{userName}
-        a(href="/Logout") Logout
-        img(src=imageURL)
+        h2 #{profile.username}
+        img(id="profileImg" src=profile.imageURL)
+
+        div
+            label Use Default Avatar
+            input(type="radio" name="avatarBtn" onclick="useDefaultAvatar()" checked="checked")
+            label Use Custom Avatar
+            input(type="radio" name="avatarBtn" onclick="useCustomAvatar()")
+        div#AvatarCustomization
+            each item in Object.keys(face)
+                .form-group
+                    label(for=item) #{item}
+                    button(onclick="changeItem(\"" + item + "\", -1)") &#60;
+                    input(id=item + "Input" type="text" readonly name=item value=face[item][0])
+                    button(onclick="changeItem(\"" + item + "\", 1)") &#62;
+        form(action="", method="post")
+            .form-group.hide
+                input(id="usernameInput" type="text" name="username" value=profile.username)
+            .form-group.hide
+                input(id="imageInput" type="text" name="imageURL" value=profile.imageURL)
+            //- Add New Profile elements...
+            .form-group 
+                input(type="submit" value="Save")
+        script(type="text/javascript").
+            var face = !{JSON.stringify(face).replace(/<\//g, "<\\/")};
+            var profile = !{JSON.stringify(profile).replace(/<\//g, "<\\/")}
+        script(src="/edit.js")
