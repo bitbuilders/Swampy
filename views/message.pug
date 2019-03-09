@@ -1,0 +1,11 @@
+mixin message(message)
+    - var contents = message ? message.message : ""
+    - var header = message ? "Edit Message" : "Create Message"
+    - var id = message ? message._id : ""
+    - var method = message ? "PUT" : "POST"
+    h3 #{header}
+    div(class="createMessage")
+        form(id='newMessage', method=method, action="/Board")
+            input.hide(type=text, value=id)
+            textarea(type="text", form="newMessage", name="message", class="messageText") #{contents}
+            input(type="submit", value="Comment", class="messageSubmit")

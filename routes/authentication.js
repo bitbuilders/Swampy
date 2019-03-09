@@ -17,7 +17,6 @@ router.post('/Login', async function(req, res){
     // // Validate
     var username = req.body['username'];
     var password = req.body['password'];
-    console.log('here');
 
     var data = await database.login(username, password);
     console.log(data);
@@ -48,12 +47,17 @@ router.post('/Register', function(req, res) {
     // Create
     database.pushToDB(user)
         .then(success => {
-            req.session.user = success.user;
-            res.redirect('/Profile');
+            console.log('In then', success);
+            if(success.error){
+                console.log('Error:', success.error);
+                res.redirect('/');
+            } else {
+                req.session.user = success.user;
+                res.redirect('/Profile');
+            }  
         })
         .catch(fail => {
-            console.log('Creation Failed')
-            console.log(fail);
+            console.log('In Catch', fail);
             res.redirect('/');
         });
 });

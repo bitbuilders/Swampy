@@ -110,6 +110,27 @@ exports.getUser = async (username) => {
     return { user };
 }
 
+exports.getMessageBoard = () => {
+    var board = [];
+    var randAmo = (Math.random() * 10 | 0) + 1;
+
+    var API = require('../utility/api');
+
+    for(var i = 0; i < randAmo; i++){
+        var username = Math.random().toString(36).substr(2,5);
+        var imageURL =  API.BASE_URL + username + '.png'
+        var message = Math.random().toString(36).substr(2,5);
+        var date = Date.now() - i * Math.random();
+        var _id = 
+
+        board.push({username, imageURL, message, date});
+    }
+    return board;
+}
+
+exports.updateMessage = (messageID, user, messageContent) => {
+    return "No";
+}
 
 // exports.create = () => {
 
