@@ -24,8 +24,7 @@ var userSchema = mongoose.Schema({
 var messageSchema = mongoose.Schema({
     username: String,
     date: String,
-    message: String,
-    imageURL: String
+    message: String
 });
 
 var User = mongoose.model("user_collection", userSchema);
