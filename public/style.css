@@ -191,6 +191,7 @@ nav a:hover {
 .message {
     background: #8FC0A9;
     padding: 5px 15px;
+    margin: 10px 0px;
     border: 1px solid #8B9D83;
     border-right-width: 3px;
     border-bottom-width: 3px;
@@ -283,10 +284,10 @@ nav a:hover {
 #barCanvas {
     width: 500px;
     height: 300px;
-    border: 3px solid #040303;
+    border: 3px solid #8FC0A9;
     border-radius: 8px;
     margin: 40px 0px;
-    background: #FAF3DD;
+    background: #8B9D83;
 }
 #scream {
     display: none;
