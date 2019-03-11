@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt-nodejs');
+var hash;
 // mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Data', {
     useNewUrlParser:true
@@ -21,8 +23,9 @@ var userSchema = mongoose.Schema({
 
 var messageSchema = mongoose.Schema({
     username: String,
-    title: String,
-    message: String
+    date: String,
+    message: String,
+    imageURL: String
 });
 
 var User = mongoose.model("user_collection", userSchema);
@@ -34,11 +37,12 @@ async function pushToDB(user) {
     var userResult = await User.findOne({username: user.username}).exec();
 
     console.log(userResult);
-
+    var hashedPassword;
     if(!userResult){
+        var hashedPassword = bcrypt.hashSync(user.password,null,null);
         bleh = new User({
             username: user.username,
-            password: user.password,
+            password: hashedPassword,
             imageURL: user.imageURL,
             isAdmin: user.isAdmin,
             email: user.email,
@@ -54,28 +58,60 @@ async function pushToDB(user) {
         return ugh;
     } else {
         //this user already exists
-        //return a user and the error message if he already exists
         var ugh = {
             user: null,
             error: "User already exists"
         }
         return ugh;
     }
-
 }
+//this is the export for the register function
 exports.pushToDB = pushToDB;
 
+//this will take in a message 
 exports.makeNewMessage = (req, res) => {
     let mess = new Message({
         username: req.body.username,
-        title: req.body.title,
+        date: req.body.title,
         message: req.body.message
     });
     Message.create(mess);
     console.log("Message should've created");
 }
 
-exports.updateUserAvatar = async (username, imageURL) => {
+//hopefully just edits the message that was passed in
+exports.editMessage = (message) => {
+    return Message.findOneAndUpdate({_id: message._id}, {message: message.message, date: message.date}).exec();
+}
+
+//should just blow up and delete the message
+exports.deleteMessage = (message) => {
+    return Message.findByIdAndDelete({_id: message._id}).exec();
+}
+
+//should return an array of all messages
+exports.getAllMessages = async () =>{
+    bleh = [];
+    var allMessages = await Message.find().exec();
+    for (let i = 0; i < allMessages.length; i++) {
+        const element = allMessages[i];
+        console.log("This is the entire message: " + element)
+        var user = await User.findOne({username: allMessages[i].username}).exec();
+        allMessages[i].imageURL = user.imageURL
+        // bleh.push(
+        //     {
+        //         messageinfo: allMessages[i], 
+        //         imageURL: user.imageURL
+        //     }
+        // )
+    }
+    return bleh;
+    //do a database call to get the avatar image
+    //store that and all messages into a custom object
+    //return those custom objects
+}
+
+exports.updateUserAvatar = async (username, imageUrl) => {
     var result = await User.findOne({username: username}).exec();
     if(result){
         result.imageURL = imageURL;
@@ -93,10 +129,11 @@ exports.login = async (username, password) => {
         return {error: "Login Failed Username not found"};
     }
 
-    if(user.password == password){
-        return  {user: user};
+    var result = bcrypt.compareSync(password, user.password);
+    if(result){
+        return user;
     } else {
-        return {error: "Login Failed becase of password"};
+        return {user: undefined, error: "Invalid Password"};
     }
 }
 
@@ -108,28 +145,6 @@ exports.getUser = async (username) => {
         return {error: "Login Failed Username not found"};
     }
     return { user };
-}
-
-exports.getMessageBoard = () => {
-    var board = [];
-    var randAmo = (Math.random() * 10 | 0) + 1;
-
-    var API = require('../utility/api');
-
-    for(var i = 0; i < randAmo; i++){
-        var username = Math.random().toString(36).substr(2,5);
-        var imageURL =  API.BASE_URL + username + '.png'
-        var message = Math.random().toString(36).substr(2,5);
-        var date = Date.now() - i * Math.random();
-        var _id = 
-
-        board.push({username, imageURL, message, date});
-    }
-    return board;
-}
-
-exports.updateMessage = (messageID, user, messageContent) => {
-    return "No";
 }
 
 // exports.create = () => {

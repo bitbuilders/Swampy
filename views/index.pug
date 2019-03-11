@@ -1,5 +1,7 @@
 extends layout
 
+include ./mixins/message.pug
+
 block content
     div(class="block")
         h1 Join in the Swamp!
@@ -9,14 +11,12 @@ block content
     //-     p Just create an account!
     div(class="messageBoard")
         h2(class="boardTitle") Message Thread
-        p Comment
-        div(class="createMessage")
-            form(id='newMessage', method="post", action="/Board")
-                textarea(type="text", name="message", class="messageText")
-                input(type="submit", value="V", class="messageSubmit")
-    div(class="message")
-        p(class="messageDelete") Delete
-        p(class="messageEdit") Edit
-        p(class="messageUser") Colin
-        p(class="messageContent") What a wonderful day to make a website with some css and stuff. It brings tears to my eyes.
-        p(class="messageDate") 3-7-2019 11:42 AM
+        +message
+    each message in board
+        div(class="message")
+            p(class="messageDelete") Delete
+            p(class="messageEdit") Edit
+            p(class="messageUser") User: #{message.username}
+            img(class="messageUser" src=message.imageURL) 
+            p(class="messageContent") Message: #{message.message}
+            p(class="messageDate") Date: #{message.date}

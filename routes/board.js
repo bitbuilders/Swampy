@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
         return;
     }
 
-    var board = database.getMessageBoard();
+    var board = database.getAllMessages();
 
     res.render('board', { menu, user, board });
 })
@@ -45,9 +45,12 @@ router.delete('/', function(req, res) {
 })
 
 router.put('/', function (req,res){
-    var user = util.getUser(req, res);
+    var user = util.getUser(req, res); // Assuming session Info is correct...
 
     var id = req.body["id"];
+
+    var message = database.getMessage()
+
     var message = req.body["message"];
 
     if(!user){
@@ -60,9 +63,13 @@ router.put('/', function (req,res){
         return;
     }
 
+    var message = {
+        _id: id,
+        message: message,
+        date: Date.now()
+    }
 
-
-    database.updateMessage(id, user, message)
+    database.editMessage(message)
         .then(success => {
             if(success.error){
                 console.log('Message Update Failed:', success.error);
