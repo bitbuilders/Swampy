@@ -1,5 +1,5 @@
 {
     "menu": [
-        ["Swampy", "/", "menuItem"]
+        ["Swampy", "/", "menuItem home"]
     ]
 }
