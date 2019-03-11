@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt-nodejs');
+var hash;
 // mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Data', {
     useNewUrlParser:true
@@ -21,7 +23,7 @@ var userSchema = mongoose.Schema({
 
 var messageSchema = mongoose.Schema({
     username: String,
-    title: String,
+    date: String,
     message: String
 });
 
@@ -34,11 +36,13 @@ async function pushToDB(user) {
     var userResult = await User.findOne({username: user.username}).exec();
 
     console.log(userResult);
-
+    var hashedPassword;
     if(!userResult){
+        hashedPassword = bcrypt.hashSync(user.password,null);
+            
         bleh = new User({
             username: user.username,
-            password: user.password,
+            password: hashedPassword,
             imageURL: user.imageURL,
             isAdmin: user.isAdmin,
             email: user.email,
@@ -54,7 +58,6 @@ async function pushToDB(user) {
         return ugh;
     } else {
         //this user already exists
-        //return a user and the error message if he already exists
         var ugh = {
             user: null,
             error: "User already exists"
@@ -63,17 +66,22 @@ async function pushToDB(user) {
     }
 
 }
+//this is the export for the register function
 exports.pushToDB = pushToDB;
 
-exports.makeNewMessage = (req, res) => {
+//this will take in a message 
+async function makeNewMessage (message) {
     let mess = new Message({
-        username: req.body.username,
-        title: req.body.title,
-        message: req.body.message
+        username: message.username,
+        date: message.title,
+        message: message.message
     });
-    Message.create(mess);
+    var results = await Message.create(mess);
     console.log("Message should've created");
+    return results;
 }
+
+exports.makeNewMessage = makeNewMessage;
 
 exports.updateUserAvatar = async (username, imageURL) => {
     var result = await User.findOne({username: username}).exec();
@@ -84,6 +92,63 @@ exports.updateUserAvatar = async (username, imageURL) => {
     }
     return {error: "No user found"};
 }
+//hopefully just edits the message that was passed in
+exports.editMessage = async (message) => {
+    //this might not work, switching it to check the username instead of the _id might be better
+
+    var results = await Message.findOneAndUpdate({_id: message._id}, {message: message.message, date: message.date})
+
+    return results;
+}
+//should just blow up and delete the message
+exports.deleteMessage = (message) => {
+    return Message.findByIdAndDelete({_id: message._id}).exec();
+}
+
+async function getMessage(message){
+    bleh = new Message();
+    var results = await Message.findOne({_id: message._id})
+    if(results){
+        bleh = new Message({
+            message: results.message,
+            _id: results._id,
+            username: results.username,
+            date: results.date
+        })
+    }else{
+        bleh = {
+            error: "No Message like that was found"
+        }
+    }
+    return bleh;
+}
+
+exports.getSingleMessage = getMessage;
+
+
+//should return an array of all messages
+exports.getAllMessages = () =>{
+    bleh = [];
+    Message.find()
+    .exec(function(err, allMessages){
+        if(err) return console.log(err);
+        for (let i = 0; i < allMessages.length; i++) {
+            const element = allMessages[i];
+            console.log("This is the entire message: " + element)
+            bleh.push(
+                {
+                    messageinfo: allMessages[i], 
+                    imageURL: User.findOne({username: allMessages[i]}).imageURL
+                }
+            )
+        }
+        return bleh;
+    })
+    //do a database call to get the avatar image
+    //store that and all messages into a custom object
+    //return those custom objects
+}
+
 
 exports.login = async (username, password) => {
 
@@ -93,10 +158,13 @@ exports.login = async (username, password) => {
         return {error: "Login Failed Username not found"};
     }
 
-    if(user.password == password){
-        return  {user: user};
-    } else {
-        return {error: "Login Failed becase of password"};
+    var res = bcrypt.compareSync(user.password, password)
+    if(res){
+        //the password matchs what was passed in
+        return {user: user};
+    }else{
+        //the password does not match the what was passed in
+        return {error: "Login failed because of password"}
     }
 }
 
