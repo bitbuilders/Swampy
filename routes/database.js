@@ -90,6 +90,13 @@ exports.updateUserAvatar = async (username, imageURL) => {
     }
     return {error: "No user found"};
 }
+exports.editUser = async (id, user) => {
+    //this might not work, switching it to check the username instead of the _id might be better
+
+    var results = await User.findByIdAndUpdate(id, user, {new: true});
+
+    return results;
+}
 //hopefully just edits the message that was passed in
 exports.editMessage = async (message) => {
     //this might not work, switching it to check the username instead of the _id might be better
@@ -173,7 +180,22 @@ exports.login = async (username, password) => {
     }
 }
 
+exports.getUserByID = async (id) => {
+    try{
+        var results = await User.findById(id).exec();
+        return {user: results };
+    } catch(err){
+        console.log(err);
+        return {error: err};
+    }
 
+    // var user = await User.findOne({_id: id}).exec();
+
+    // if(!user){
+    //     return {error: "Username not found"};
+    // }
+    // return { user };
+}
 exports.getUser = async (username) => {
     var user = await User.findOne({username: username}).exec();
 
@@ -205,8 +227,10 @@ exports.getUserMessageCount = (username) =>{
     //return those custom objects
 }
 
-exports.deleteUser = (username) => {
-    User.findByIdAndRemove({username: username}, function(err, user){
+exports.deleteUser = async (username) => {
+    Message.deleteMany({username: username}).exec();
+
+    return await User.findOneAndDelete({username: username}, function(err, user){
         if(err) return console.log(err);
-    })
+    }).exec();
 }
