@@ -8,11 +8,10 @@ router.get('/', (req, res) => {
     var user = util.getUser(req, res);
     var menu = util.getMenu(user);
 
-    // console.log(user);
-
     database.getAllMessages(user)
         .then(success => {
             var board = success;
+            console.log('Message Board', board);
             res.render('index', { user, menu, board });
         });
 });
