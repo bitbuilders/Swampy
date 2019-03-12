@@ -102,7 +102,9 @@ exports.editMessage = async (message) => {
 }
 //should just blow up and delete the message
 exports.deleteMessage = (message) => {
-    return Message.findByIdAndDelete({_id: message._id}).exec();
+    return Message.findByIdAndRemove({_id: message._id}, function(err, message){
+        if(err) console.error(err)
+    }).exec();
 }
 
 async function getMessage(message){
@@ -123,7 +125,7 @@ async function getMessage(message){
     return bleh;
 }
 
-exports.getSingleMessage = getMessage;
+exports.getMessage = getMessage;
 
 
 //should return an array of all messages
@@ -178,7 +180,30 @@ exports.getUser = async (username) => {
     return { user };
 }
 
+exports.getUserMessageCount = (username) =>{
+    var bleh;
+    var count = 0;
+    Message.find({username: username})
+    .exec(function(err, allMessages){
+        if(err) return console.log(err);
+        for (let i = 0; i < allMessages.length; i++) {
+            const element = allMessages[i];
+            count++;
+        }
+        bleh = {
+            messageCount: count,
+            imageURL: User.findOne({username: allMessages[i]}).imageURL
+        }
+            
+        return bleh;
+    })
+    //do a database call to get the avatar image
+    //store that and all messages into a custom object
+    //return those custom objects
+}
 
-// exports.create = () => {
-
-// }
+exports.deleteUser = (username) => {
+    User.findByIdAndRemove({username: username}, function(err, user){
+        if(err) return console.log(err);
+    })
+}
