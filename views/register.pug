@@ -3,15 +3,21 @@ extends layout
 block content
     h2 Create a New Account
     form(id='form', method="post", action="/Auth/Register")
-        p Username:&nbsp;
-            input(type="text", name="username", required)
-        p Password:&nbsp;
-            input(type="password", name="password", required)
-        p Are you an Admin?&nbsp;
-            input(type="checkbox", name="admin")
-        p Email:&nbsp;
-            input(type="text", name="email")
-        p Age:&nbsp;
-            input(type="number", name="age")
-        p 
-            input(type="submit", value="Send It")
+        div(class="inptField")
+            p Username:&nbsp;
+                input(type="text", name="username", required)
+        div(class="inptField")
+            p Password:&nbsp;
+                input(type="password", name="password", required)
+        div(class="inptField")
+            p Are you an Admin?&nbsp;
+                input(type="checkbox", name="admin", class="admin")
+        div(class="inptField")
+            p Email:&nbsp;
+                input(type="text", name="email")
+        div(class="inptField")
+            p Age:&nbsp;
+                input(type="number", name="age")
+        div(class="inptField")
+            p 
+                input(type="submit", value="Create Account", class="login")
