@@ -5,7 +5,7 @@ var util = require('../utility/util');
 
 var router = express.Router();
 
-router.get('/', function(req, res) {
+router.get('/Post', function(req, res) {
     var user = util.getUser(req, res);
     var menu = util.getMenu(user);
 
@@ -14,12 +14,31 @@ router.get('/', function(req, res) {
         return;
     }
 
-    var board = database.getAllMessages();
+    res.render('messageEdit', { menu, user });
+})
+router.get('/Edit', async function(req, res) {
+    var user = util.getUser(req, res);
+    var menu = util.getMenu(user);
 
-    res.render('board', { menu, user, board });
+    var id = req.query['id'] || req.body['id'];
+
+    if(!user){
+        res.redirect('/Auth/Login');
+        return;
+    }
+
+    if(!id){
+        console.log('No Id given');
+        res.redirect('/');
+        return;
+    }
+
+    var message = await database.getMessage({_id: id});
+
+    res.render('messageEdit', { menu, user, message });
 })
 
-router.post('/', function(req, res) {
+router.post('/Post', function(req, res) {
     var user = util.getUser(req, res);
 
     if(!user){
@@ -27,24 +46,20 @@ router.post('/', function(req, res) {
         return;
     }
 
+    
     var message = {
         username: user.username,
         message: req.body["message"],
-        date: Date.now()
+        date: new Date(Date.now()).toString()
     }
+    console.log(message);
 
     database.makeNewMessage(message);
 
-    res.redirect('board');
+    res.redirect('/');
 })
 
-router.delete('/', function(req, res) {
-    var user = util.getUser(req, res);
-
-
-})
-
-router.put('/', function (req,res){
+router.post('/Edit', function (req,res){
     var user = util.getUser(req, res); // Assuming session Info is correct...
 
     var id = req.body["id"];
@@ -66,7 +81,7 @@ router.put('/', function (req,res){
     var message = {
         _id: id,
         message: message,
-        date: Date.now()
+        date: new Date(Date.now()).toString()
     }
 
     database.editMessage(message)
@@ -75,13 +90,17 @@ router.put('/', function (req,res){
                 console.log('Message Update Failed:', success.error);
             } 
 
-            res.redirect('/Board');
+            res.redirect('/');
         })
         .catch(fail => {
             console.log(fail);
-            res.redirect('/Board');
+            res.redirect('/');
         })
 
 });
+
+router.all('/Delete', function(req, res) {
+    var user = util.getUser(req, res);
+})
 
 module.exports = router;

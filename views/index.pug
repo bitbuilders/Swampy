@@ -3,19 +3,27 @@ extends layout
 include ./mixins/message.pug
 
 block content
-    div(class="block")
-        h1 Join in the Swamp!
     //- div(class="section")
     //-     p Want to talk about swamp stuff?
     //- div(class="section sectionRight")
     //-     p Just create an account!
-    div(class="messageBoard")
-        h2(class="boardTitle") Message Thread
-        +message
+    if user
+        div(class="block")
+            h1 Welcome to the Swamp, #{user.username}!
+        div(class="messageBoard")
+            +message
+    else 
+        div(class="block")
+            h1 Join in the Swamp!
+    h2(class="boardTitle") Message Board
     each message in board
         div(class="message")
-            p(class="messageDelete") Delete
-            p(class="messageEdit") Edit
+            if message.canDelete
+                p(class="messageDelete")
+                    a(href="/Board/Delete?id=" + message._id) Delete
+            if message.canEdit
+                p(class="messageEdit")
+                    a(href="/Board/Edit?id=" + message._id) Edit
             p(class="messageUser") User: #{message.username}
             img(class="messageUser" src=message.imageURL) 
             p(class="messageContent") Message: #{message.message}

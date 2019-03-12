@@ -39,7 +39,7 @@ async function pushToDB(user) {
     console.log(userResult);
     var hashedPassword;
     if(!userResult){
-        var hashedPassword = bcrypt.hashSync(user.password,null,null);
+        hashedPassword = bcrypt.hashSync(user.password,null,null);
         bleh = new User({
             username: user.username,
             password: hashedPassword,
@@ -69,49 +69,20 @@ async function pushToDB(user) {
 exports.pushToDB = pushToDB;
 
 //this will take in a message 
-exports.makeNewMessage = (req, res) => {
+async function makeNewMessage (message) {
     let mess = new Message({
-        username: req.body.username,
-        date: req.body.title,
-        message: req.body.message
+        username: message.username,
+        date: message.date,
+        message: message.message
     });
-    Message.create(mess);
+    var results = await Message.create(mess);
     console.log("Message should've created");
+    return results;
 }
 
-//hopefully just edits the message that was passed in
-exports.editMessage = (message) => {
-    return Message.findOneAndUpdate({_id: message._id}, {message: message.message, date: message.date}).exec();
-}
+exports.makeNewMessage = makeNewMessage;
 
-//should just blow up and delete the message
-exports.deleteMessage = (message) => {
-    return Message.findByIdAndDelete({_id: message._id}).exec();
-}
-
-//should return an array of all messages
-exports.getAllMessages = async () =>{
-    bleh = [];
-    var allMessages = await Message.find().exec();
-    for (let i = 0; i < allMessages.length; i++) {
-        const element = allMessages[i];
-        console.log("This is the entire message: " + element)
-        var user = await User.findOne({username: allMessages[i].username}).exec();
-        allMessages[i].imageURL = user.imageURL
-        // bleh.push(
-        //     {
-        //         messageinfo: allMessages[i], 
-        //         imageURL: user.imageURL
-        //     }
-        // )
-    }
-    return bleh;
-    //do a database call to get the avatar image
-    //store that and all messages into a custom object
-    //return those custom objects
-}
-
-exports.updateUserAvatar = async (username, imageUrl) => {
+exports.updateUserAvatar = async (username, imageURL) => {
     var result = await User.findOne({username: username}).exec();
     if(result){
         result.imageURL = imageURL;
@@ -120,6 +91,68 @@ exports.updateUserAvatar = async (username, imageUrl) => {
     }
     return {error: "No user found"};
 }
+//hopefully just edits the message that was passed in
+exports.editMessage = async (message) => {
+    //this might not work, switching it to check the username instead of the _id might be better
+
+    var results = await Message.findOneAndUpdate({_id: message._id}, {message: message.message, date: message.date})
+
+    return results;
+}
+//should just blow up and delete the message
+exports.deleteMessage = (message) => {
+    return Message.findByIdAndDelete({_id: message._id}).exec();
+}
+
+async function getMessage(message){
+    bleh = new Message();
+    var results = await Message.findOne({_id: message._id})
+    if(results){
+        bleh = new Message({
+            message: results.message,
+            _id: results._id,
+            username: results.username,
+            date: results.date
+        })
+    }else{
+        bleh = {
+            error: "No Message like that was found"
+        }
+    }
+    return bleh;
+}
+
+exports.getMessage = getMessage;
+
+
+//should return an array of all messages
+exports.getAllMessages = async (currUser) =>{
+    currUser = currUser || {};
+
+    bleh = [];
+    var allMessages = await Message.find().exec();
+    for (let i = 0; i < allMessages.length; i++) {
+        const element = allMessages[i];
+        console.log("This is the entire message: " + element)
+
+        var user = await User.findOne({username: allMessages[i].username}).exec();
+
+        allMessages[i].imageURL = user.imageURL
+        allMessages[i].canEdit = user._id.toHexString() === currUser._id
+        allMessages[i].canDelete = user._id.toHexString() === currUser._id || currUser.isAdmin
+        // bleh.push(
+        //     {
+        //         messageinfo: allMessages[i], 
+        //         imageURL: user.imageURL
+        //     }
+        // )
+    }
+    return allMessages;
+    //do a database call to get the avatar image
+    //store that and all messages into a custom object
+    //return those custom objects
+}
+
 
 exports.login = async (username, password) => {
 
@@ -129,11 +162,13 @@ exports.login = async (username, password) => {
         return {error: "Login Failed Username not found"};
     }
 
-    var result = bcrypt.compareSync(password, user.password);
-    if(result){
-        return user;
-    } else {
-        return {user: undefined, error: "Invalid Password"};
+    var res = bcrypt.compareSync(password, user.password)
+    if(res){
+        //the password matchs what was passed in
+        return {user: user};
+    }else{
+        //the password does not match the what was passed in
+        return {error: "Login failed because of password"}
     }
 }
 
