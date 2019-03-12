@@ -12,12 +12,10 @@ router.get('/', function(req, res) {
     var user = util.getUser(req, res);
     var menu = util.getMenu(user);
 
-    console.log('Session User is', user);
-
     // Check existing User Session
     if(!user){
-        console.log('Redirecting');
-        res.redirect('/');
+        console.log('No Valid User');
+        res.redirect('/Auth/Login');
         return;
     }
 
@@ -30,7 +28,7 @@ router.get('/Edit', function(req, res) {
 
     // Check existing User Session
     if(!user){
-        res.redirect('/');
+        res.redirect('/Auth/Login');
         return;
     }
 
@@ -56,7 +54,7 @@ router.post('/Edit', async function(req, res) {
 
     // Check existing User Session
     if(!user){
-        res.redirect('/');
+        res.redirect('/Auth/Login');
         return;
     }
     if(user.username !== profileEdit.username){
@@ -68,15 +66,12 @@ router.post('/Edit', async function(req, res) {
             .then(result => {
                 if(result.error){
                     console.log(error);
-                    return;
                 }
 
                 req.session.user = result.user;
+                res.redirect('/Profile');
             })
-        // user.imageURL = profileEdit.imageURL;
     }
-    
-    res.redirect('/Profile');
 });
 
 // Deletes the current User

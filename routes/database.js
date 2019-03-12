@@ -38,8 +38,7 @@ async function pushToDB(user) {
     console.log(userResult);
     var hashedPassword;
     if(!userResult){
-        hashedPassword = bcrypt.hashSync(user.password,null);
-            
+        hashedPassword = bcrypt.hashSync(user.password,null,null);
         bleh = new User({
             username: user.username,
             password: hashedPassword,
@@ -64,7 +63,6 @@ async function pushToDB(user) {
         }
         return ugh;
     }
-
 }
 //this is the export for the register function
 exports.pushToDB = pushToDB;
@@ -73,7 +71,7 @@ exports.pushToDB = pushToDB;
 async function makeNewMessage (message) {
     let mess = new Message({
         username: message.username,
-        date: message.title,
+        date: message.date,
         message: message.message
     });
     var results = await Message.create(mess);
@@ -129,23 +127,28 @@ exports.getMessage = getMessage;
 
 
 //should return an array of all messages
-exports.getAllMessages = () =>{
+exports.getAllMessages = async (currUser) =>{
+    currUser = currUser || {};
+
     bleh = [];
-    Message.find()
-    .exec(function(err, allMessages){
-        if(err) return console.log(err);
-        for (let i = 0; i < allMessages.length; i++) {
-            const element = allMessages[i];
-            console.log("This is the entire message: " + element)
-            bleh.push(
-                {
-                    messageinfo: allMessages[i], 
-                    imageURL: User.findOne({username: allMessages[i]}).imageURL
-                }
-            )
-        }
-        return bleh;
-    })
+    var allMessages = await Message.find().exec();
+    for (let i = 0; i < allMessages.length; i++) {
+        const element = allMessages[i];
+        console.log("This is the entire message: " + element)
+
+        var user = await User.findOne({username: allMessages[i].username}).exec();
+
+        allMessages[i].imageURL = user.imageURL
+        allMessages[i].canEdit = user._id.toHexString() === currUser._id
+        allMessages[i].canDelete = user._id.toHexString() === currUser._id || currUser.isAdmin
+        // bleh.push(
+        //     {
+        //         messageinfo: allMessages[i], 
+        //         imageURL: user.imageURL
+        //     }
+        // )
+    }
+    return allMessages;
     //do a database call to get the avatar image
     //store that and all messages into a custom object
     //return those custom objects
@@ -160,7 +163,7 @@ exports.login = async (username, password) => {
         return {error: "Login Failed Username not found"};
     }
 
-    var res = bcrypt.compareSync(user.password, password)
+    var res = bcrypt.compareSync(password, user.password)
     if(res){
         //the password matchs what was passed in
         return {user: user};

@@ -7,6 +7,7 @@ var expressSession = require('express-session');
 var homeRouter = require('./routes/home');
 var authRouter = require('./routes/authentication');
 var profileRouter = require('./routes/profile');
+var boardRouter = require('./routes/board')
 
 var app = express();
 var secret = process.env.SECRET || 'Web-Final';
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use(expressSession({secret: secret, saveUninitialized: true, resave: true}));
 
 app.use('/Auth', authRouter);
+app.use('/Board', boardRouter);
 app.use('/Profile', profileRouter);
 app.use('/', homeRouter);
 

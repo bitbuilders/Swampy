@@ -28,7 +28,8 @@ var configDefault = require('../config/menu.json');
 const getMenu = (user) => {
     let menu = [];
     menu = menu.concat(configDefault.menu);
-    if (user && user.isAuthenticated) {
+    // if (user && user.isAuthenticated) {
+    if (user) {
         menu.push(["Profile", "/Profile", "menuItem"]);
         menu.push(["Hello " + user.username, "/Profile", "menuItem right"]);
         menu.push(["Logout", "/Auth/Logout", "menuItem right"]);
