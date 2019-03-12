@@ -205,26 +205,55 @@ exports.getUser = async (username) => {
     return { user };
 }
 
-exports.getUserMessageCount = (username) =>{
-    var bleh;
+exports.getAllUsers = async () => {
+    var allUsers = await User.find().exec();
+
+    return allUsers;
+}
+
+exports.getUserMessageCount = () =>{
+    // exports.getUserMessageCount = (username) =>{
+    // var bleh;
+    // var count = 0;
+    // Message.find({username: username})
+    // .exec(function(err, allMessages){
+    //     if(err) return console.log(err);
+    //     for (let i = 0; i < allMessages.length; i++) {
+    //         const element = allMessages[i];
+    //         count++;
+    //     }
+    //     bleh = {
+    //         messageCount: count,
+    //         imageURL: User.findOne({username: allMessages[i]}).imageURL
+    //     }
+            
+    //     return bleh;
+    // })
+    var bleh = [];
     var count = 0;
-    Message.find({username: username})
+    Message.find()
     .exec(function(err, allMessages){
         if(err) return console.log(err);
         for (let i = 0; i < allMessages.length; i++) {
             const element = allMessages[i];
-            count++;
+            count = 0;
+            allMessages.forEach(mess => {
+                if(mess.username === allMessages[i].username){
+                    count++;
+                }
+            });
+            if(!bleh.includes(allMessages[i].username)){
+                bleh.push({
+                    username: allMessages,
+                    messageCount: count,
+                    imageURL: User.findOne({username: username}).imageURL
+                })
+            }
         }
-        bleh = {
-            messageCount: count,
-            imageURL: User.findOne({username: allMessages[i]}).imageURL
-        }
+
             
         return bleh;
     })
-    //do a database call to get the avatar image
-    //store that and all messages into a custom object
-    //return those custom objects
 }
 
 exports.deleteUser = async (username) => {
