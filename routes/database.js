@@ -211,7 +211,7 @@ exports.getAllUsers = async () => {
     return allUsers;
 }
 
-exports.getUserMessageCount = () =>{
+exports.getUserMessageCount = async () =>{
     // exports.getUserMessageCount = (username) =>{
     // var bleh;
     // var count = 0;
@@ -230,7 +230,14 @@ exports.getUserMessageCount = () =>{
     //     return bleh;
     // })
     var bleh = [];
-    var count = 0;
+    // var count = 0;
+    var allUsers = await User.find().exec();
+    for(var i = 0; i < allUsers.length; i++){
+        var count = await Message.countDocuments({username: allUsers[i].username}).exec();
+        bleh.push({imageURL: allUsers[i].imageURL, count});
+    }
+    return bleh;
+    
     Message.find()
     .exec(function(err, allMessages){
         if(err) return console.log(err);
@@ -246,7 +253,7 @@ exports.getUserMessageCount = () =>{
                 bleh.push({
                     username: allMessages,
                     messageCount: count,
-                    imageURL: User.findOne({username: username}).imageURL
+                    imageURL: User.findOne({username: allMessages[i].username}).imageURL
                 })
             }
         }
