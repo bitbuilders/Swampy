@@ -15,7 +15,13 @@ block content
     else 
         div(class="block")
             h1 Join in the Swamp!
-    h2(class="boardTitle") Message Board
+    div(class="messageBoard")
+        h2(class="boardTitle") Message Thread
+        p Comment
+        div(class="createMessage")
+            form(id='newMessage', method="post", action="/")
+                textarea(type="text", name="message", class="messageText")
+                input(type="submit", value="V", class="messageSubmit")
     each message in board
         div(class="message")
             if message.canDelete
@@ -29,7 +35,15 @@ block content
             p(class="messageContent") Message: #{message.message}
             p(class="messageDate") Date: #{message.date}
     img(id="scream" src='https://wvtourism.com/wp-content/uploads/2018/04/3144431-shrek2-480x240.jpg')
-
+    div(class="message")
+        p(class="messageDelete")
+            a(href="/") Delete
+        p(class="messageEdit")
+            a(href="/") Edit
+        img(class="messageImage", src="https://wvtourism.com/wp-content/uploads/2018/04/3144431-shrek2-480x240.jpg")
+        p(class="messageUser") Colin
+        p(class="messageContent") What a wonderful day to make a website with some css and stuff. It brings tears to my eyes.
+        p(class="messageDate") 3-7-2019 11:42 AM
     div(class="barGraph")
         canvas(id="barCanvas")
         script().
@@ -39,16 +53,16 @@ block content
                 var ctx = c.getContext("2d");
 
                 var userImages = [];
-                var userNum = 10;
+                var userNum = 20;
                 var xGrowth = c.width / (userNum + 1);
-                var x = xGrowth;
-                var y = c.height - 20;
-                var imgWidth = 20 / (userNum / 10);
-                var imgHeight = 20 / (userNum / 10);
+                var imgWidth = 25 / (userNum / 10);
+                var imgHeight = 25 / (userNum / 10);
                 var imgHalf = imgWidth / 2;
+                var x = xGrowth;
+                var y = c.height - imgHeight;
 
-                var maxPosts = 10;
-                var maxHeight = c.height - imgHeight * 3;
+                var maxPosts = 20;
+                var maxHeight = c.height - imgHeight * 2.75;
                 var posts = 0;
 
                 for (var i = 0; i < userNum; i++) {
@@ -59,14 +73,14 @@ block content
                         var yPos = y - imgHalf;
                         ctx.drawImage(img, xPos, yPos, imgWidth, imgHeight);
 
-                        var bL = { x: xPos, y: yPos - imgHalf };
+                        var bL = { x: xPos, y: yPos - 5 };
                         var tL = { x: xPos, y: (yPos - imgHalf) - (posts / maxPosts) * maxHeight };
                         var tR = { x: xPos + imgWidth, y: tL.y };
                         var bR = { x: tR.x, y: bL.y };
                         var r = Math.floor(Math.random() * (100)) + 156;
                         var g = Math.floor(Math.random() * (100)) + 156;
                         var b = Math.floor(Math.random() * (100)) + 156;
-                        ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+                        ctx.fillStyle = 'rgb(' + 100 + ',' + g + ',' + b + ')';
                         ctx.fillRect(tL.x, tL.y, tR.x - tL.x, bR.y - tR.y);
                         x += xGrowth;
                     };
@@ -75,6 +89,3 @@ block content
                 }
 
             }
-
-            var whatever = '#{a}';
-            var title = '#{title}';
