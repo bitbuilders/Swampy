@@ -173,7 +173,22 @@ exports.login = async (username, password) => {
     }
 }
 
+exports.getUserByID = async (id) => {
+    try{
+        var results = await User.findById(id).exec();
+        return {user: results };
+    } catch(err){
+        console.log(err);
+        return {error: err};
+    }
 
+    // var user = await User.findOne({_id: id}).exec();
+
+    // if(!user){
+    //     return {error: "Username not found"};
+    // }
+    // return { user };
+}
 exports.getUser = async (username) => {
     var user = await User.findOne({username: username}).exec();
 
@@ -205,8 +220,10 @@ exports.getUserMessageCount = (username) =>{
     //return those custom objects
 }
 
-exports.deleteUser = (username) => {
-    User.findByIdAndRemove({username: username}, function(err, user){
+exports.deleteUser = async (username) => {
+    Message.deleteMany({username: username}).exec();
+
+    return await User.findOneAndDelete({username: username}, function(err, user){
         if(err) return console.log(err);
-    })
+    }).exec();
 }

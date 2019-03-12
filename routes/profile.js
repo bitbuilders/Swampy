@@ -35,18 +35,6 @@ router.get('/Edit', function(req, res) {
     res.render('profileEdit', {menu, user, face: faceConfig["face"]});
 });
 
-// Display Other Profile
-router.get('/:username', function(req, res) {
-    var user = util.getUser(req, res);
-    var menu = util.getMenu(user);
-
-    var username = req.params['username'];
-
-    var displayUser = database.getUser(username);
-
-    res.render('profile', {menu, user: displayUser});
-});
-
 // Edit user Profile
 router.post('/Edit', async function(req, res) {
     var user = util.getUser(req, res);
@@ -75,8 +63,51 @@ router.post('/Edit', async function(req, res) {
 });
 
 // Deletes the current User
-router.delete('/', function(req, res){
-    res.send('Deleting Profile is not Implemented');
+router.all('/Delete', async function(req, res){
+    console.log('Deleting Profile')
+    var user = util.getUser(req, res);
+
+    var id = req.body["id"] || req.query["id"];
+
+    if(!user){
+        res.redirect('/Auth/Login');
+        return;
+    }
+    if(!id){
+        console.log('ID is required');
+        res.redirect('/');
+        return;
+    }
+    if(!user.isAdmin){
+        console.log('You are not authorized to Delete this Profile!');
+        res.redirect('/');
+        return;
+    }
+
+    var profile = await database.getUserByID(id);
+    console.log(profile);
+    if(profile.error){
+        console.log(profile.error);
+        res.redirect('/');
+        return;
+    }
+    //http://localhost:3000/Profile/Delete?id=5c874f522854e01af4e62817
+
+    var result = await database.deleteUser(profile.user.username);
+    console.log('Delete Result', result);
+    res.redirect('/');
 })
+
+// Display Other Profile
+router.get('/:username', function(req, res) {
+    var user = util.getUser(req, res);
+    var menu = util.getMenu(user);
+
+    var username = req.params['username'];
+
+    var displayUser = database.getUser(username);
+
+    res.render('profile', {menu, user: displayUser});
+});
 
 module.exports = router;

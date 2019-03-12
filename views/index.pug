@@ -15,13 +15,13 @@ block content
     else 
         div(class="block")
             h1 Join in the Swamp!
-    div(class="messageBoard")
-        h2(class="boardTitle") Message Thread
-        p Comment
-        div(class="createMessage")
-            form(id='newMessage', method="post", action="/")
-                textarea(type="text", name="message", class="messageText")
-                input(type="submit", value="V", class="messageSubmit")
+    //- div(class="messageBoard")
+    //-     h2(class="boardTitle") Message Thread
+    //-     p Comment
+    //-     div(class="createMessage")
+    //-         form(id='newMessage', method="post", action="/")
+    //-             textarea(type="text", name="message", class="messageText")
+    //-             input(type="submit", value="V", class="messageSubmit")
     each message in board
         div(class="message")
             if message.canDelete
@@ -35,15 +35,15 @@ block content
             p(class="messageContent") Message: #{message.message}
             p(class="messageDate") Date: #{message.date}
     img(id="scream" src='https://wvtourism.com/wp-content/uploads/2018/04/3144431-shrek2-480x240.jpg')
-    div(class="message")
-        p(class="messageDelete")
-            a(href="/") Delete
-        p(class="messageEdit")
-            a(href="/") Edit
-        img(class="messageImage", src="https://wvtourism.com/wp-content/uploads/2018/04/3144431-shrek2-480x240.jpg")
-        p(class="messageUser") Colin
-        p(class="messageContent") What a wonderful day to make a website with some css and stuff. It brings tears to my eyes.
-        p(class="messageDate") 3-7-2019 11:42 AM
+    //- div(class="message")
+    //-     p(class="messageDelete")
+    //-         a(href="/") Delete
+    //-     p(class="messageEdit")
+    //-         a(href="/") Edit
+    //-     img(class="messageImage", src="https://wvtourism.com/wp-content/uploads/2018/04/3144431-shrek2-480x240.jpg")
+    //-     p(class="messageUser") Colin
+    //-     p(class="messageContent") What a wonderful day to make a website with some css and stuff. It brings tears to my eyes.
+    //-     p(class="messageDate") 3-7-2019 11:42 AM
     div(class="barGraph")
         canvas(id="barCanvas")
         script().
