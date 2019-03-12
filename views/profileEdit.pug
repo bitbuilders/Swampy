@@ -35,6 +35,15 @@ block content
         .form-group 
             input(type="submit" value="Save")
     script(type="text/javascript").
+        //- So # {} or ! {} is interpolation. It executes code on the server and injects it into the client.
+        //- Therefore, !{JSON.stringify(data)}. Takes 'data' variable and Stringifies it.
+        //-  I.E. {username: "Hello", imageURL: "..."}
+        //- We can set a variable to that new JSON String to 'copy' or 'create' a new object
+        //- The Client ends up looking like this
+        //-  var user = {username: "Hello", imageURL: "..."}
+        //-  Which is valid Javascript
+        //- 
+
         var face = !{JSON.stringify(face).replace(/<\//g, "<\\/")};
-        var user = !{JSON.stringify(user).replace(/<\//g, "<\\/")}
+        var user = !{JSON.stringify(user).replace(/<\//g, "<\\/")};
     script(src="/edit.js")

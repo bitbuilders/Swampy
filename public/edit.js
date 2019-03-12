@@ -1,11 +1,14 @@
 
 const BASE_URL = 'https://api.adorable.io/avatars';
-// const face;
 
 console.log(face);
-console.log(user);
-// console.log(faceObj);
-// console.log(users);
+// console.log(user);
+
+// console.log(username);
+console.log(riskStr);
+console.log(userObj);
+
+// console.log(faceTemp);
 
 var currFace = {};
 {
