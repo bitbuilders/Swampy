@@ -8,6 +8,10 @@ router.get('/', (req, res) => {
     var user = util.getUser(req, res);
     var menu = util.getMenu(user);
 
+    if(!user){
+        res.redirect('/Auth/Login');
+        return;
+    }
     if(!user.isAdmin){
         console.log('You are not authorized to View this Page!');
         res.redirect('/');
