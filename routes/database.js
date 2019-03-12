@@ -183,11 +183,6 @@ exports.getUser = async (username) => {
     return { user };
 }
 
-<<<<<<< HEAD
-// exports.create = () => {
-
-// }
-=======
 exports.getUserMessageCount = (username) =>{
     var bleh;
     var count = 0;
@@ -215,4 +210,3 @@ exports.deleteUser = (username) => {
         if(err) return console.log(err);
     })
 }
->>>>>>> d060442c185a7a14a3a5f8e869a2fb7af7817c0c

@@ -4,4 +4,8 @@ block content
     h2(class="profileName") #{user.username}
     a(href="/Auth/Logout", class="profileLogout") Logout
     img(src=user.imageURL, class="profileImage")
+    if user.isAdmin
+        p I am an admin
+    p Email: #{user.email}
+    p Age: #{user.age}
     a(href="/Profile/Edit", class="profileEdit") Edit
