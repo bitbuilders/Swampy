@@ -1,12 +1,16 @@
 extends layout
 
 block content
-    form(action="/Auth/Login", method="POST")
+    h2 Login
+    form(action="/Auth/Login", method="POST", class="loginForm")
         .formGroup
-            label(for="username") UserName:
-            input(type="text", name="username")
+            div(class="inptField")
+                label(for="username") UserName:
+                input(type="text", name="username")
         .formGroup
-            label(for="password") Password:
-            input(type="password", name="password")
+            div(class="inptField")
+                label(for="password") Password:
+                input(type="password", name="password")
         .formGroup
-            input(type="submit", value="Login")
+            div(class="inptField")
+                input(type="submit", value="Login", class="login")

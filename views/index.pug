@@ -15,6 +15,7 @@ block content
     else 
         div(class="block")
             h1 Join in the Swamp!
+<<<<<<< HEAD
     //- div(class="messageBoard")
     //-     h2(class="boardTitle") Message Thread
     //-     p Comment
@@ -22,6 +23,8 @@ block content
     //-         form(id='newMessage', method="post", action="/")
     //-             textarea(type="text", name="message", class="messageText")
     //-             input(type="submit", value="V", class="messageSubmit")
+=======
+>>>>>>> 7b4cf41f0bb2e1ccca7770177ee338a01256bfdd
     each message in board
         div(class="message")
             if message.canDelete
@@ -30,10 +33,10 @@ block content
             if message.canEdit
                 p(class="messageEdit")
                     a(href="/Board/Edit?id=" + message._id) Edit
-            p(class="messageUser") User: #{message.username}
-            img(class="messageUser" src=message.imageURL) 
-            p(class="messageContent") Message: #{message.message}
-            p(class="messageDate") Date: #{message.date}
+            img(class="messageImage" src=message.imageURL) 
+            p(class="messageUser") #{message.username}
+            p(class="messageContent") #{message.message}
+            p(class="messageDate") #{message.date}
     img(id="scream" src='https://wvtourism.com/wp-content/uploads/2018/04/3144431-shrek2-480x240.jpg')
     //- div(class="message")
     //-     p(class="messageDelete")

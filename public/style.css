@@ -292,3 +292,101 @@ nav a:hover {
 #scream {
     display: none;
 }
+
+.users {
+    margin: 20px 0px;
+    background: #8FC0A9;
+    border: 2px solid #8B9D83;
+    border-radius: 5px;
+    border-bottom-width: 4px;
+    border-right-width: 4px;
+    padding: 10px;
+}
+
+.userTable {
+    table-layout: fixed;
+    text-align: center;
+    border-collapse: collapse;
+    margin: 5px auto;
+    background: #8B9D83;
+    color: #040303;
+    font-size: 20px;
+}
+
+.userTable td, .userTable th {
+    word-wrap: break-word;
+    max-width: 100px;
+    padding: 10px 15px;
+    border: 2px solid #040303;
+    margin: 0;
+}
+
+.userTable .email {
+    max-width: 250px;
+}
+
+tr:hover {
+    background: #FAF3DD;
+}
+
+.userTable a {
+    text-decoration: none;
+    color: #8FC0A9;
+    text-shadow: 1px 1px 2px #040303;
+}
+
+.userTable a:hover {
+    cursor: pointer;
+}
+
+.userImage img {
+    display: block;
+    width: 75px;
+    height: 75px;
+    /* border: 1px solid #040303; */
+    border-radius: 3px;
+}
+
+.inptField {
+    margin: 20px 0px;
+    font-size: 25px;
+}
+
+.inptField label {
+}
+
+.inptField .login {
+    height: 40px;
+    padding: 5px;
+}
+
+.inptField .login:hover {
+    background: #FAF3DD;
+    cursor: pointer;
+}
+
+.inptField input {
+    font-family: 'Sniglet', cursive;
+    padding: 3px;
+    margin: 0px 5px;
+    border: 1px solid #040303;
+    border-radius: 5px;
+    height: 30px;
+    font-size: 25px;
+}
+
+.inptField input:focus {
+    box-shadow: 0 0 0 1pt #FAF3DD;
+    outline: none;
+}
+
+.loginForm {
+    margin: 20px 0px;
+}
+
+.inptField .admin {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+}

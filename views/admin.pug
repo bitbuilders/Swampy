@@ -1,17 +1,24 @@
 extends layout
 
-h1 Super Secret Admin Stuff
-p Proceed with caution
-div(class="users")
-    table(class="userTable")
-        th
-        th Name
-        th User Level
-        th Email
-        th Age
-        th
-        each item in users
-            td #{item}.image
-            td #{item}.name
-            td
-                a(href='/admin') Delete
+block content
+    h1 Super Secret Admin Stuff
+    p Proceed with caution
+    div(class="users")
+        table(class="userTable")
+            tr
+                th 
+                th Name
+                th User Level
+                th Email
+                th Age
+                th 
+            each item in users
+                tr
+                    td(class="userImage")
+                        img(src=item.image)
+                    td #{item.name}
+                    td #{item.level}
+                    td(class="email") #{item.email}
+                    td #{item.age}
+                    td
+                        a(href='/admin') Delete
