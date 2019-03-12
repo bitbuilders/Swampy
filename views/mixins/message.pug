@@ -2,12 +2,11 @@ mixin message(message)
     - var contents = message ? message.message : ""
     - var header = message ? "Edit Message" : "Create Message"
     - var id = message ? message._id : ""
-    - var method = message ? "PUT" : "POST"
+    - var method = "POST"
     - var action = message ? "/Board/Edit" : "/Board/Post"
-    - console.log(message)
     h3 #{header}
     div(class="createMessage")
         form(id='newMessage', method=method, action=action)
-            input.hide(type=text, value=id)
+            input.hide(type=text, name="id", value=id)
             textarea(type="text", form="newMessage", name="message", class="messageText") #{contents}
             input(type="submit", value="Comment", class="messageSubmit")

@@ -14,16 +14,19 @@ router.get('/Login', function(req, res) {
 });
 // Login User Logic
 router.post('/Login', async function(req, res){
+    console.log('Logging In');
     // // Validate
     var username = req.body['username'];
     var password = req.body['password'];
 
     var data = await database.login(username, password);
-    console.log(data);
+   
     if(!data.error){
         req.session.user = data.user 
+        console.log('User', data.user);
         res.redirect('/Profile');
     } else {
+        console.log('Error', data.error)
         res.redirect('/');
     }
 });
@@ -45,6 +48,7 @@ router.post('/Register', function(req, res) {
     user.age = req.body['age'];
 
     // Create
+    console.log('Creating new User')
     database.pushToDB(user)
         .then(success => {
             console.log('In then', success);
@@ -53,6 +57,7 @@ router.post('/Register', function(req, res) {
                 res.redirect('/');
             } else {
                 req.session.user = success.user;
+                console.log('User', success.user);
                 res.redirect('/Profile');
             }  
         })
@@ -64,6 +69,8 @@ router.post('/Register', function(req, res) {
 
 // Logout User - No Logic / View
 router.all('/Logout', function(req, res){
+    console.log('Logging out');
+
     // Remove Session...
     req.session.user = undefined;
 

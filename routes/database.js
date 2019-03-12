@@ -134,7 +134,7 @@ exports.getAllMessages = async (currUser) =>{
     var allMessages = await Message.find().exec();
     for (let i = 0; i < allMessages.length; i++) {
         const element = allMessages[i];
-        console.log("This is the entire message: " + element)
+        // console.log("This is the entire message: " + element)
 
         var user = await User.findOne({username: allMessages[i].username}).exec();
 
