@@ -90,6 +90,13 @@ exports.updateUserAvatar = async (username, imageURL) => {
     }
     return {error: "No user found"};
 }
+exports.editUser = async (id, user) => {
+    //this might not work, switching it to check the username instead of the _id might be better
+
+    var results = await User.findByIdAndUpdate(id, user, {new: true});
+
+    return results;
+}
 //hopefully just edits the message that was passed in
 exports.editMessage = async (message) => {
     //this might not work, switching it to check the username instead of the _id might be better

@@ -38,28 +38,32 @@ router.get('/Edit', function(req, res) {
 // Edit user Profile
 router.post('/Edit', async function(req, res) {
     var user = util.getUser(req, res);
-    var profileEdit = req.body;
+
+    var editUser = {};
+    editUser.imageURL = req.body['imageURL']
+    editUser.isAdmin = req.body['admin'] === "on";
+    editUser.email = req.body['email'];
+    editUser.age = req.body['age'];
+
+    console.log(user);
+    console.log(editUser);
 
     // Check existing User Session
     if(!user){
         res.redirect('/Auth/Login');
         return;
     }
-    if(user.username !== profileEdit.username){
-        throw new Error("You do not have permission to Edit that user");
-    }
 
-    if(profileEdit.imageURL){
-        database.updateUserAvatar(user.username, profileEdit.imageURL)
-            .then(result => {
-                if(result.error){
-                    console.log(error);
-                }
-
-                req.session.user = result.user;
-                res.redirect('/Profile');
-            })
-    }
+    database.editUser(user._id, editUser)
+        .then(success => {
+            console.log(success);
+            req.session.user = success;
+            res.redirect('/Profile');
+        })
+        .catch(fail => {
+            console.log('Error in Edit User:', fail);
+            res.redirect('/');
+        })
 });
 
 // Deletes the current User
