@@ -8,17 +8,17 @@ block content
             tr
                 th 
                 th Name
-                th User Level
+                th Is Admin
                 th Email
                 th Age
                 th 
             each item in users
                 tr
                     td(class="userImage")
-                        img(src=item.image)
-                    td #{item.name}
-                    td #{item.level}
+                        img(src=item.imageURL)
+                    td #{item.username}
+                    td #{item.isAdmin}
                     td(class="email") #{item.email}
                     td #{item.age}
                     td
-                        a(href='/admin') Delete
+                        a(href='/Profile/Delete?id=' + item._id) Delete
