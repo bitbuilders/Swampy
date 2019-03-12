@@ -24,8 +24,7 @@ var userSchema = mongoose.Schema({
 var messageSchema = mongoose.Schema({
     username: String,
     date: String,
-    message: String,
-    imageURL: String
+    message: String
 });
 
 var User = mongoose.model("user_collection", userSchema);
@@ -101,7 +100,9 @@ exports.editMessage = async (message) => {
 }
 //should just blow up and delete the message
 exports.deleteMessage = (message) => {
-    return Message.findByIdAndDelete({_id: message._id}).exec();
+    return Message.findByIdAndRemove({_id: message._id}, function(err, message){
+        if(err) console.error(err)
+    }).exec();
 }
 
 async function getMessage(message){
@@ -182,6 +183,36 @@ exports.getUser = async (username) => {
     return { user };
 }
 
+<<<<<<< HEAD
 // exports.create = () => {
 
 // }
+=======
+exports.getUserMessageCount = (username) =>{
+    var bleh;
+    var count = 0;
+    Message.find({username: username})
+    .exec(function(err, allMessages){
+        if(err) return console.log(err);
+        for (let i = 0; i < allMessages.length; i++) {
+            const element = allMessages[i];
+            count++;
+        }
+        bleh = {
+            messageCount: count,
+            imageURL: User.findOne({username: allMessages[i]}).imageURL
+        }
+            
+        return bleh;
+    })
+    //do a database call to get the avatar image
+    //store that and all messages into a custom object
+    //return those custom objects
+}
+
+exports.deleteUser = (username) => {
+    User.findByIdAndRemove({username: username}, function(err, user){
+        if(err) return console.log(err);
+    })
+}
+>>>>>>> d060442c185a7a14a3a5f8e869a2fb7af7817c0c
